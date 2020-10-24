@@ -1,12 +1,17 @@
-public class Turtle extends Tile {
+\public class Turtle extends Tile {
     private Direction dir;
     private Colour col;
+    private String name;
+    private PlayerState state = PlayerState.PLAYING;
 
-    public Turtle(Coordinate c, Colour co, Direction d) {
+    public Turtle(Coordinate c, Colour co, Direction d, String name) {
         super(c);
-        setDirection(d);
+        col = co;
+        dir = d;
+        // setDirection(d);
     }
 
+    public void won() { state = PlayerState.WON;}
     public void setDirection(Direction d)
     {
         dir = d;
@@ -17,10 +22,11 @@ public class Turtle extends Tile {
         return dir;
     }
 
-    public void setColour(Colour clr)
-    {
-        col = clr;
-    }
+    public PlayerState getState () { return state;}
+    // public void setColour(Colour clr)
+    // {
+    //     col = clr;
+    // }
 
     public Colour getColour()
     {
