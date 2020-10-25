@@ -1,35 +1,61 @@
-import java.util.Scanner;
-
 public class GameController {
-    // private GameView view;
-    private GameModel model;
-    private Scanner in;
+    private GameView view;
+    private GameModel model = null;
 
     public GameController(){
-        in = new Scanner(System.in);
-        
-        System.out.print("Enter the number of players (1-4): ");     // TODO - GO TO VIEWER
-        int nPlayers = in.nextInt();
-        // model = new GameModel(nPlayers);
-        // view = new GameView();
+        view = new GameView();
     }
 
     public void playTurn(){
+        TurtleMaster currentPlayer = model.getCurrentPlayer();
         
+        // Colour red = Colour.RED;
+        // if(red.name().equalsIgnoreCase("red"))
+        //     System.out.println("COLOUR IS CORRECT");
+        // else System.out.println("DIDN'T WORK");
+        // String colour;
+        // switch (currentPlayer.getColour()){
+        //     case RED:
+        //         colour = "Red";
+        //         break;
+        //     case BLUE:
+        //         colour = "Blue";
+        //         break;
+        //     case PURPLE:
+        //         colour = "Purple";
+        //         break;
+        //     case GREEN:
+        //         colour = "Green";
+        //         break;
+        //     // default:
+        // }
+        // System.out.print(colour + " Turtlemaster enter a card [f,l,r]: ");
+        // String card = in.nextLine();
     }
 
     public void playGame(){
-        GameState currentState = model.getCurrentState ();
+        GameState currentState = model.getGameState();
         while (currentState == GameState.ONGOING){
             playTurn();
-            currentState = model.getCurrentState ();
-            // view.displayBoard(model.getBoard)
+            currentState = model.getGameState();
+            // view.displayBoard(model.getBoard())  // TODO - Add parser & send to viewer
         }
-        System.out.println("THANKS FOR PLAYING!"); // TODO - VIEWER
+        System.out.println("THANKS FOR PLAYING!\n\n--------------------------------"); // TODO - VIEWER
+    }
+
+    public boolean initializeGame(){
+        if (view.displayGameMenu() == 1){
+            model = new GameModel(view.promptPlayers());
+            return true;
+        }
+        else return false;
     }
 
     public static void main(String[] args) {
         GameController controller = new GameController();
-        controller.playGame();
+        while (controller.initializeGame()){
+            controller.playGame();
+        }
+        System.out.println("Program Ended");
     }
 }
