@@ -30,7 +30,7 @@ public class GameController {
     {
         // Prompting player for move by requesting input
         Scanner sc = new Scanner(System.in);
-        System.out.println(player.getPlayerName() + " (" + player.getColour() + ") - Enter move card...\n [LEFT, RIGHT, FORWARD]:");
+        System.out.println(player.getPlayerName() + " - Enter move card...\n [LEFT, RIGHT, FORWARD]:");
         String response = sc.nextLine().toUpperCase();
         Card input = (model.moveList().contains(response)) ? Card.valueOf(response) : null;
         Move result = new Move(player, input, model.getBoard());
@@ -43,7 +43,15 @@ public class GameController {
     public void playTurn(Move mov)
     {
         // Executing move chosen by player
+        TurtleMaster curr = mov.getCurrPlayer();
         model.updateBoard(mov);
+        if ((mov.getCard() == Card.LEFT) ||(mov.getCard() == Card.LEFT)) {
+            view.displayPrompt(curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is now facing " + curr.getDir().toString() + ".\n\n");
+        } // Sending view about update if direction player is facing has changed.
+        if(mov.getCurrPlayer().hasWon())
+        {
+            view.displayWinner(curr.getColour().toString(), curr.getPlayerName()); // Displaying player win
+        }
     }
 
     public void playRound()
@@ -52,7 +60,11 @@ public class GameController {
         ArrayDeque<TurtleMaster> plyrSequence = model.getPlayers();
         Iterator seq = plyrSequence.iterator();
 
-        while(seq.hasNext()) {playTurn(promptMove((TurtleMaster) seq.next()));}
+        while(seq.hasNext()) {
+            TurtleMaster curr = (TurtleMaster) seq.next();
+            view.displayPrompt(curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is facing " + curr.getDir().toString() + ".\n");
+            playTurn(promptMove(curr));
+        }
         //Iterating through each player and executing move
 
         System.out.println("Round is complete. All players have moved their turtles.");
