@@ -24,9 +24,10 @@ public class GameModel
     public boolean validate(Move chg)
     {
         // Checking if move is valid based on index of turtle's position on board and direction of turtle
-        Card shift = chg.getMove();
-        if((shift == Card.LEFT_TURN) || ((shift == Card.RIGHT_TURN))) {return true;}
-        // Controller.Move is valid if it is a left turn or right turn
+        if (chg == null) {return false;} // Move is automatically invalid if null
+        Card shift = chg.getCard();
+        if((shift == Card.LEFT) || ((shift == Card.RIGHT))) {return true;}
+        // Move is automatically valid if it is a left turn or right turn
 
         Turtle currPlayer = chg.getCurrPlayer();
         Direction currDir = currPlayer.getDir();
@@ -34,8 +35,6 @@ public class GameModel
 
         return ((!test.outBounds(maxSize)) && (board.isEmpty(test)));
         // Valid move if new coordinate is in bounds and space is empty
-
-        // TODO: BUG
     }
 
     public GameState getGameState(){ return state;}
@@ -46,14 +45,17 @@ public class GameModel
 
     public Board getBoard() {return board;} // Returns game board
 
-    public void updateBoard(Move chg) {if (validate(chg)) {chg.execute();}} // Updates board if valid move is executed
+    public void updateBoard(Move chg) {
+        if (validate(chg)) {
+            chg.execute();
+        }
+    } // Updates board if valid move is executed
+
+
+    public List<String> moveList() {return List.of("LEFT", "RIGHT", "FORWARD", "BUG");}
+    // Helper method to return card instructions as strings; will help with parsing user input in GameController.promptMove()
+
 
     public int getMaxSize() {return maxSize;} // Returns maximum size of board according to model
 
-    public void markWinner(TurtleMaster winner)
-    {
-        // Method to mark TurtleMaster as winner
-        winner.won();
-        players.remove(winner); // Remove player from queue
-    }
 }

@@ -25,9 +25,9 @@ public class GameView {
     }
 
     public void displayBoard (int[][] jewels, int [][] players, int size){
-        char [][] board = new char [size+1][size+1];
-        for (int y = 0; y <= size; y++)
-            for (int x = 0; x <= size; x++)
+        char [][] board = new char [size][size];
+        for (int y = 0; y < size; y++)
+            for (int x = 0; x < size; x++)
                 board[y][x] = '.';
 
         for (int i = 0; i < jewels.length; i++){
@@ -59,8 +59,8 @@ public class GameView {
         }
 
         StringBuilder str = new StringBuilder ();
-        for (int y = 0; y <= size; y++){
-            for (int x = 0; x <= size; x++){
+        for (int y = 0; y < size; y++){
+            for (int x = 0; x < size; x++){
                 str.append(board[y][x]);
                 str.append(' ');
             }

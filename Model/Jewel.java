@@ -10,8 +10,4 @@ public class Jewel extends ColouredTile {
     public void setColour(Colour clr) {
         col = clr;
     }
-
-    public Colour getColour() {
-        return col;
-    }
 }
