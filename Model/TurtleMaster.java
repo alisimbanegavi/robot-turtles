@@ -9,14 +9,14 @@ import java.util.*;
 public class TurtleMaster extends Turtle
 {
     private String name;
-    private PlayerState state;
     private Stack<Card> cardSequence;
+    private boolean winner;
 
     public TurtleMaster(Coordinate c, Colour colour, Direction d)
     {
         super(c, colour, d);
-        state = PlayerState.PLAYING;
         cardSequence = new Stack<>();
+        winner = false;
     }
 
     public void setPlayerName(String n)
@@ -26,7 +26,7 @@ public class TurtleMaster extends Turtle
 
     public String getPlayerName() { return name;}
 
-    public Boolean hasWon() { return state == PlayerState.WON;}
+    public Boolean hasWon() { return winner;}
 
     public Stack<Card> cardSeq()
     {
@@ -46,5 +46,5 @@ public class TurtleMaster extends Turtle
         return null;
     }
 
-    public void won() {state = PlayerState.WON;}
+    public void won() {winner = true;}
 }

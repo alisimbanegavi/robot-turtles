@@ -8,16 +8,16 @@ import java.util.*;
  */
 public class GameModel
 {
-    private GameState state;
     private ArrayDeque<TurtleMaster> players;
     private Board board;
     private int maxSize;
+    private boolean complete;
 
     public GameModel (List<TurtleMaster> tMasters, Board b)
     {
         board = b;
         players = new ArrayDeque<>(tMasters);
-        state = GameState.ONGOING;
+        complete = false;
         maxSize = b.getSize();
     }
 
@@ -37,9 +37,7 @@ public class GameModel
         // Valid move if new coordinate is in bounds and space is empty
     }
 
-    public GameState getGameState(){ return state;}
-
-    public boolean gameOver(){return (state == GameState.COMPLETE);} //  Checking if game is over
+    public boolean gameOver(){return complete;} //  Checking if game is over
 
     public ArrayDeque<TurtleMaster> getPlayers() {return players;} // Returns queue of players
 
