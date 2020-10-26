@@ -26,6 +26,7 @@ public class Move
         playerTile = (Turtle) t;
         instruction = input;
         currDirection = t.getDir();
+        gBoard = target;
     }
 
     public TurtleMaster getCurrPlayer()
@@ -60,8 +61,8 @@ public class Move
         // Assigning each direction a numerical value that will change based on turn direction
         Map<Direction, Integer> turnDirection = Map.of(
                 Direction.NORTH, 1,
-                Direction.SOUTH, 2,
-                Direction.EAST, 3,
+                Direction.EAST, 2,
+                Direction.SOUTH, 3,
                 Direction.WEST, 4
         );
         int n = turnDirection.get(currDirection); // Getting number that corresponds to current direction

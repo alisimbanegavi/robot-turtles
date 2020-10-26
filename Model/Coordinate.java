@@ -48,6 +48,6 @@ public class Coordinate
 
     public boolean outBounds(int MAX)
     {
-        return xPos < 0 || xPos > MAX || yPos < 0 || yPos > MAX;
+        return xPos < 0 || xPos >= MAX || yPos < 0 || yPos >= MAX;
     }
 }

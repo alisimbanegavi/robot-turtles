@@ -17,7 +17,7 @@ public class GameView {
     }
 
     public void displayWinner (String name, String turtleColour){
-        System.out.println ("Congratulations "+name+"!\nYour "+turtleColour+" Model.Turtle has captured a Model.Jewel. You hav WON!!!");
+        System.out.println ("Congratulations "+name+"!\nYour "+turtleColour+" Turtle has captured a Jewel. You have WON!!!");
     }
 
     public void displayPrompt (String prompt){

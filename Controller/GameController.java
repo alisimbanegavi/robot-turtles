@@ -30,12 +30,12 @@ public class GameController {
     {
         // Prompting player for move by requesting input
         Scanner sc = new Scanner(System.in);
-        System.out.println(player.getPlayerName() + " - Enter move card...\n [LEFT, RIGHT, FORWARD]:");
+        System.out.println(player.getPlayerName() + " - Enter move card...\n [LEFT, RIGHT, FORWARD, BUG]:");
         String response = sc.nextLine().toUpperCase();
         Card input = (model.moveList().contains(response)) ? Card.valueOf(response) : null;
         Move result = new Move(player, input, model.getBoard());
 
-        if(model.validate(result)) {return result;} // Controller.Move is executed on board if valid according to model
+        if(model.validate(result)) {return result;} // Move is executed on board if valid according to model
         else {System.out.println("Sorry, " + player.getPlayerName() + ", but that move is invalid." );}
         return promptMove(player);
     }
@@ -45,7 +45,7 @@ public class GameController {
         // Executing move chosen by player
         TurtleMaster curr = mov.getCurrPlayer();
         model.updateBoard(mov);
-        if ((mov.getCard() == Card.LEFT) ||(mov.getCard() == Card.LEFT)) {
+        if ((mov.getCard() == Card.LEFT) ||(mov.getCard() == Card.RIGHT)) {
             view.displayPrompt(curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is now facing " + curr.getDir().toString() + ".\n\n");
         } // Sending view about update if direction player is facing has changed.
         if(mov.getCurrPlayer().hasWon())
@@ -62,7 +62,7 @@ public class GameController {
 
         while(seq.hasNext()) {
             TurtleMaster curr = (TurtleMaster) seq.next();
-            view.displayPrompt(curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is facing " + curr.getDir().toString() + ".\n");
+            view.displayPrompt("\n" + curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is facing " + curr.getDir().toString() + ".\n");
             playTurn(promptMove(curr));
         }
         //Iterating through each player and executing move

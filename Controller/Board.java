@@ -52,7 +52,7 @@ public class Board
     public boolean isEmpty(Coordinate c)
     {
         Tile tester = config[c.getX()][c.getY()];
-        return ((tester instanceof Turtle) || (tester instanceof Jewel)); // Tests if tile is empty
+        return (!(tester instanceof Turtle) && !(tester instanceof Jewel)); // Tests if tile is empty
     }
 
     public void shiftTile(Coordinate orig, Coordinate dest)
@@ -82,10 +82,10 @@ public class Board
         Coordinate newC = orig.copy();
         if ((di == Direction.NORTH) || (di == Direction.SOUTH)) // Condition for vertical chg
         {
-            newC.setX((di == Direction.NORTH) ? orig.getX() - 1: orig.getX() + 1); // Chg vertical position by -1 if moving north and +1 if moving south
+            newC.setX((di == Direction.NORTH) ? orig.getY() - 1: orig.getY() + 1); // Chg vertical position by -1 if moving north and +1 if moving south
         }else // Condition for horizontal change
         {
-            newC.setX((di == Direction.WEST) ? orig.getY() - 1: orig.getY() + 1); // Chg horizontal position by -1 if moving west and +1 if moving east
+            newC.setX((di == Direction.EAST) ? orig.getX() - 1: orig.getX() + 1); // Chg horizontal position by -1 if moving west and +1 if moving east
         }
         return newC;
     }

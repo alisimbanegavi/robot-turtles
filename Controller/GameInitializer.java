@@ -59,7 +59,7 @@ public class GameInitializer
         // Assigning each player to a new Turtle and adding to list of players
         for(int i = 0; i < n; i++)
         {
-            currDir = (locations.get(i).getX() == 0 ? Direction.SOUTH: Direction.NORTH);
+            currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);
             TurtleMaster newPlayer = new TurtleMaster(locations.get(i), colours[i], currDir);
             view.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
             namePlayer(newPlayer, input.next()); // Prompting each player for their name
