@@ -18,25 +18,26 @@ public class GameController {
         view.displayWelcome();
     }
 
-    public boolean initializeGame(GameView mainView){
+    public void initializeGame(){
         // Method to call initializer to assign players to turtles and populate board with tiles
-        GameInitializer initGame = new GameInitializer(mainView);
-        return initGame.start();
+        GameInitializer initGame = new GameInitializer(view);
+        initGame.start();
+        model = initGame.newGame();
+        converter = new BoardConverter(model.getBoard());
     }
 
     public Move promptMove(TurtleMaster player)
     {
         // Prompting player for move by requesting input
         Scanner sc = new Scanner(System.in);
-        System.out.println(player.getName() + " (" + player.getColour() + ") - Enter desired move card...\n [LEFT, RIGHT, FORWARD]:");
+        System.out.println(player.getPlayerName() + " (" + player.getColour() + ") - Enter move card...\n [LEFT, RIGHT, FORWARD]:");
         String response = sc.nextLine().toUpperCase();
-        Card input = Card.valueOf(response);
+        Card input = (model.moveList().contains(response)) ? Card.valueOf(response) : null;
         Move result = new Move(player, input, model.getBoard());
 
         if(model.validate(result)) {return result;} // Controller.Move is executed on board if valid according to model
-        else {System.out.println("Sorry, " + player.getName() + " but that move is invalid." );}
+        else {System.out.println("Sorry, " + player.getPlayerName() + ", but that move is invalid." );}
         return promptMove(player);
-        // TODO RE-ROUTE REJECTED MOVE TO GET PLAYER TO TRY INPUT AGAIN
     }
 
     public void playTurn(Move mov)

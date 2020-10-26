@@ -17,9 +17,10 @@ public class Board
     {
         size = n;
         config = new Tile[n][n];
-
+        turtles = new ArrayList<Turtle>();
         for(TurtleMaster m: players) { turtles.add(m);} // Getting piece for each player
         placeTurtles(turtles);
+        jewels = gems;
         placeJewels(gems);
     }
 
@@ -32,7 +33,6 @@ public class Board
     public void placeJewels(List<Jewel> jwls)
     {
         // Placing all jewels on board
-        jewels = jwls;
         for (Jewel j: jwls) {setTileAtPos(j.getCoord(), j);}
     }
 
@@ -60,12 +60,20 @@ public class Board
         // Moving tile in desired direction
         Tile toMove = getTileAtPos(orig);
         setTileAtPos(dest, toMove);
-        clearSpace(orig);
+        removeTile(orig);
     }
 
-    public void clearSpace(Coordinate toClear)
+    public void removeTile(Coordinate toClear)
     {
         config[toClear.getX()][toClear.getY()] = null;
+    }
+
+    public void markWinner(TurtleMaster winner)
+    {
+        // Method to mark TurtleMaster as winner
+        winner.won();
+        removeTile(winner.getCoord());
+        turtles.remove((Turtle)winner); // Remove player from board
     }
 
     public Coordinate newCoord(Coordinate orig, Direction di)

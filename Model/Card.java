@@ -1,8 +1,10 @@
 package Model;
 
+import java.util.List;
+
 public enum Card {
-    LEFT_TURN,
-    RIGHT_TURN,
+    LEFT,
+    RIGHT,
     FORWARD,
-    BUG
+    BUG;
 }

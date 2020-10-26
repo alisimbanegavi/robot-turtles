@@ -9,10 +9,9 @@ import java.util.*;
 public class TestGame {
     public static void main(String[] args) {
         GameController control = new GameController();
-        if (control.initializeGame(control.getView()))
-        {
-            control.playGame();
-        }
+        control.initializeGame();
+        control.playGame();
+
         System.out.println("Program Ended");
     }
 }

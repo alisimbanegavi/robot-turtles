@@ -32,6 +32,7 @@ public class GameInitializer
             view.displayPrompt("Enter number of players (1-4): ");
             nPlayers = input.nextInt(); // TODO - constrain input (1-4)
             createPlayers(nPlayers); // Method to gather player info through system input and initialize TurtleMasters
+            createBoard(nPlayers);// Instantiating board with jewels and player tiles
             GameModel model = newGame(); // Initializing game model
             converter = new BoardConverter(model.getBoard());
             return true;
@@ -58,7 +59,7 @@ public class GameInitializer
         // Assigning each player to a new Turtle and adding to list of players
         for(int i = 0; i < n; i++)
         {
-            currDir = (locations.get(i).getX() == 0 ? Direction.NORTH: Direction.SOUTH);
+            currDir = (locations.get(i).getX() == 0 ? Direction.SOUTH: Direction.NORTH);
             TurtleMaster newPlayer = new TurtleMaster(locations.get(i), colours[i], currDir);
             view.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
             namePlayer(newPlayer, input.next()); // Prompting each player for their name
@@ -102,10 +103,10 @@ public class GameInitializer
     public List<Coordinate> centerCoordinates()
     {
         List<Coordinate> center = new ArrayList<Coordinate>();
-        center.add(new Coordinate(SIZE/2, SIZE/2)); // Northwest center corner
-        center.add(new Coordinate(SIZE/2, (SIZE/2) + 1)); // Northeast center corner
-        center.add(new Coordinate((SIZE/2) + 1, (SIZE/2))); // Southeast center corner
-        center.add(new Coordinate((SIZE/2) + 1, (SIZE/2) + 1)); // Southwest center corner
+        center.add(new Coordinate((SIZE/2)-1, (SIZE/2)-1)); // Northwest center corner
+        center.add(new Coordinate((SIZE/2)-1, (SIZE/2))); // Northeast center corner
+        center.add(new Coordinate((SIZE/2), ((SIZE/2)-1))); // Southeast center corner
+        center.add(new Coordinate((SIZE/2), (SIZE/2))); // Southwest center corner
 
         return center;
     }
