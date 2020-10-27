@@ -4,22 +4,6 @@ package View;
  * GameView class for display
  */
 public class GameView {
-    // public void displayWelcome (){
-    //     System.out.println("Welcome to Robot Turtles");
-    // }
-
-    public void displayGoodbye() {
-        System.out.println("Thanks for playing!");
-    }
-
-    public void displayGameOver () {
-        System.out.println("Congratulations everyone has won!\n\n-----------------------");
-    }
-
-    public void displayWinner (String name, String turtleColour){
-        System.out.println ("Congratulations "+name+"!\nYour "+turtleColour+" Turtle has captured a Jewel. You have WON!!!");
-    }
-
     public void displayText(String txt){
         System.out.println(txt);
     }
