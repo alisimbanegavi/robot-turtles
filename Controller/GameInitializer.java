@@ -32,7 +32,7 @@ public class GameInitializer
             while (nPlayers < 1 || nPlayers > 4){
                 view.displayPrompt("Enter number of players (1-4): ");
                 nPlayers = input.nextInt();
-            }            
+            }
             createPlayers(); // Method to gather player info through system input and initialize TurtleMasters
             createBoard();// Instantiating board with jewels and player tiles
             return true;
@@ -59,7 +59,7 @@ public class GameInitializer
         // Assigning each player to a new Turtle and adding to list of players
         for(int i = 0; i < nPlayers; i++)
         {
-            currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);            // TODO - ok, but perhaps have each turtle with different direction
+            currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);
             TurtleMaster newPlayer = new TurtleMaster(locations.get(i), colours[i], currDir);
             view.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
             namePlayer(newPlayer, input.next()); // Prompting each player for their name

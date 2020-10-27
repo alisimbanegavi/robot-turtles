@@ -24,17 +24,35 @@ public class GameModel
     public boolean validate(Move chg)
     {
         // Checking if move is valid based on index of turtle's position on board and direction of turtle
-        if (chg == null) {return false;} // Move is automatically invalid if null
+        if (chg.getCard() == null) {return false;} // Move is automatically invalid if null
         Card shift = chg.getCard();
-        if((shift == Card.LEFT) || ((shift == Card.RIGHT))) {return true;}
-        // Move is automatically valid if it is a left turn or right turn
+
+        if (shift == Card.BUG){return validBug(chg);} // Check for valid bug if bug card is inputted
+
+        if((shift == Card.LEFT) || (shift == Card.RIGHT)) {return true;}
+        // Move is automatically valid if move is a left turn or right turn
 
         Turtle currPlayer = chg.getCurrPlayer();
         Direction currDir = currPlayer.getDir();
-        Coordinate test = board.nextCoord(currPlayer.getCoord(), currDir);
+        Coordinate test = board.coordAhead(currPlayer.getCoord(), currDir);
+        // If new coordinate will
 
-        return ((!test.outBounds(maxSize)) && (board.isEmpty(test)));
+        return ((!test.outBounds(maxSize)) && (board.isEmpty(test) || (board.getTileAtPos(test) instanceof Jewel)));
         // Valid move if new coordinate is in bounds and space is empty
+    }
+
+    public boolean validBug(Move chg)
+    {
+        // Method to test is bug card move is valid based on index of turtle's position on board and direction of turtle
+        if (chg.getCard() != Card.BUG) {return false;} // False if bug card is not being evaluated
+
+        TurtleMaster toBug = chg.getCurrPlayer();
+        if(toBug.cardSeq().peek() == Card.FORWARD) // Test if bug card is requesting move backwards
+        {
+            Coordinate test = board.coordBehind(toBug.getCoord(), toBug.getDir()); // Testing coordinate behind bug
+            return (board.isEmpty(test) || !(board.getTileAtPos(test) instanceof Turtle)); // True if space is empty or not another turtle
+        }
+        return true; // Automatically true if bug card is reversing right or left turn
     }
 
     public boolean gameOver(){return complete;} //  Checking if game is over
@@ -46,9 +64,9 @@ public class GameModel
     public void updateBoard(Move chg) {
         if (validate(chg)) {
             chg.execute();
+            if (chg.checkBoard().getTurtles().size() == 0) {complete = true;} // Mark game complete if all players have collected their jewels and board is empty
         }
     } // Updates board if valid move is executed
-
 
     public List<String> moveList() {return List.of("LEFT", "RIGHT", "FORWARD", "BUG");}
     // Helper method to return card instructions as strings; will help with parsing user input in GameController.promptMove()

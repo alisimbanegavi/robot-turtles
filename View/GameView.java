@@ -46,20 +46,6 @@ public class GameView {
             // player num
             int playerNum = players[i][2] + 1; // based on colour
             board[y][x] = (char)(playerNum+'0');
-
-            // // or player colour
-            // int playerColour = players[i][2];
-            // if      (playerColour == 0) board[y][x] = 'b';
-            // else if (playerColour == 1) board[y][x] = 'r';
-            // else if (playerColour == 2) board[y][x] = 'p';
-            // else if (playerColour == 3) board[y][x] = 'g';
-
-            // Test - player dir
-            // int playerDir = players[i][3];
-            // if      (playerDir == 0) board[y][x] = 'n';
-            // else if (playerDir == 1) board[y][x] = 's';
-            // else if (playerDir == 2) board[y][x] = 'e';
-            // else if (playerDir == 3) board[y][x] = 'w';
         }
 
         StringBuilder str = new StringBuilder ();

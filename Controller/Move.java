@@ -49,7 +49,7 @@ public class Move
     {
         // Calculating new coordinate and performing shift
         Coordinate orig = player.getCoord();
-        Coordinate next = gBoard.nextCoord(orig, currDirection);
+        Coordinate next = gBoard.coordAhead(orig, currDirection);
         if(checkForJewel(next)) {gBoard.markWinner(player);}
         gBoard.shiftTile(orig, next);
     }
@@ -78,7 +78,7 @@ public class Move
     public void bug()
     {
         // Undoes move performed by last card used by TurtleMaster
-        if(player.cardSeq().size() != 0) // Reversal only executed if previous card sequence is not empty
+        if(player.cardSeq().size() > 0) // Reversal only executed if previous card sequence is not empty
         {
             Card buggy = player.removeFromSeq(); // Last card executed
 
@@ -99,9 +99,10 @@ public class Move
         // Helper method for bug() if last card executed by player was forward step
         Direction backwards = reverseDirection(); // Getting opposite direction of last step forward
         Direction saveDir = currDirection;
-        player.setDirection(reverseDirection());
+        currDirection = reverseDirection();
         step(); // Turtle takes step in direction opposite from the one they are facing
-        player.setDirection(saveDir); // Turtle faces original direction after step backwards
+        currDirection = saveDir; // Turtle faces original direction after step backwards
+        player.setDirection(saveDir);
     }
 
     public Direction reverseDirection()
@@ -118,4 +119,6 @@ public class Move
     {
         return (gBoard.getTileAtPos(target) instanceof Jewel); // Helper method to check for jewel
     }
+
+    public Board checkBoard() {return gBoard;} // Returns copy of board move is enacted on
 }

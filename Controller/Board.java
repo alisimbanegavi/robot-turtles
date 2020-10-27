@@ -44,9 +44,12 @@ public class Board
 
     public void setTileAtPos(Coordinate target, Tile place)
     {
-        // Returns tile at specific coordinate
-        place.setCoordinate(target);
-        config[target.getX()][target.getY()] = place;
+        // Sets tile at specific coordinate to specific Tile
+        if(place == null) { removeTile(target);} // Removes tile if null value in inputted
+        else{
+            place.setCoordinate(target); // Place tile on board and update tile's coordinate
+            config[target.getX()][target.getY()] = place;
+        }
     }
 
     public boolean isEmpty(Coordinate c)
@@ -76,16 +79,30 @@ public class Board
         turtles.remove((Turtle)winner); // Remove player from board
     }
 
-    public Coordinate nextCoord(Coordinate orig, Direction di)
+    public Coordinate coordAhead(Coordinate orig, Direction di)
     {
-        // Calculates new coordinate based on shift in particular direction
+        // Calculates coordinate ahead based on shift in particular direction
         Coordinate newC = orig.copy();
         if ((di == Direction.NORTH) || (di == Direction.SOUTH)) // Condition for vertical chg
         {
-            newC.setY((di == Direction.NORTH) ? orig.getY() - 1: orig.getY() + 1); // Chg vertical position by -1 if moving north and +1 if moving south
+            newC.setY((di == Direction.NORTH) ? orig.getY() - 1: orig.getY() + 1); // Chg vertical position by -1 if facing north and +1 if facing south
         }else // Condition for horizontal change
         {
-            newC.setX((di == Direction.EAST) ? orig.getX() + 1: orig.getX() - 1); // Chg horizontal position by -1 if moving west and +1 if moving east
+            newC.setX((di == Direction.EAST) ? orig.getX() + 1: orig.getX() - 1); // Chg horizontal position by -1 if facing west and +1 if facing east
+        }
+        return newC;
+    }
+
+    public Coordinate coordBehind(Coordinate orig, Direction di)
+    {
+        // Calculates coordinate behind based on shift opposite to particular direction
+        Coordinate newC = orig.copy();
+        if ((di == Direction.NORTH) || (di == Direction.SOUTH)) // Condition for vertical chg
+        {
+            newC.setY((di == Direction.NORTH) ? orig.getY() + 1: orig.getY() - 1); // Chg vertical position by +1 if facing north and -1 if facing south
+        }else // Condition for horizontal change
+        {
+            newC.setX((di == Direction.EAST) ? orig.getX() - 1: orig.getX() + 1); // Chg horizontal position by +1 if facing west and -1 if facing east
         }
         return newC;
     }

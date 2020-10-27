@@ -59,10 +59,8 @@ public class GameController {
     {
         System.out.println("New round beginning. Players, prepare your strategy.");
         ArrayDeque<TurtleMaster> plyrSequence = model.getPlayers();
-        Iterator seq = plyrSequence.iterator();
 
-        while(seq.hasNext()) {
-            TurtleMaster curr = (TurtleMaster) seq.next();
+        for (TurtleMaster curr : plyrSequence) {
             view.displayPrompt("\n" + curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is facing " + curr.getDir().toString() + ".\n");
             playTurn(promptMove(curr));
         }
@@ -75,12 +73,10 @@ public class GameController {
     {
         int dimensions = model.getMaxSize();
         view.displayBoard(converter.parseJewels(), converter.parseTurtles(), dimensions);
-        while (!model.gameOver()){
+        while (!model.gameOver()){ // Play while game status is not complete
             playRound();
             view.displayBoard(converter.parseJewels(), converter.parseTurtles(), dimensions);
         }
-        view.displayGameOver();
+        view.displayGameOver(); // Game has ended and display message is shown
     }
-
-    public GameView getView() {return view;} // TODO - why?
 }
