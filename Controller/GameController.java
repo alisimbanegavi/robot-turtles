@@ -31,7 +31,7 @@ public class GameController {
     {
         // Prompting player for move by requesting input
         // Scanner sc = new Scanner(System.in);
-        view.displayPrompt(player.getPlayerName() + " - Enter move card...\n [LEFT, RIGHT, FORWARD, BUG]: ");
+        view.displayPrompt(player.getPlayerName() + " - Enter move card [LEFT, RIGHT, FORWARD, BUG]: ");
         String response = input.nextLine().toUpperCase();
         Card choice = (model.moveList().contains(response)) ? Card.valueOf(response) : null;
         Move result = new Move(player, choice, model.getBoard());
@@ -47,11 +47,11 @@ public class GameController {
         TurtleMaster curr = mov.getCurrPlayer();
         model.updateBoard(mov);
         if ((mov.getCard() == Card.LEFT) ||(mov.getCard() == Card.RIGHT)) {
-            view.displayPrompt(curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is now facing " + curr.getDir().toString() + ".\n\n");
+            view.displayText(curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is now facing " + curr.getDir().toString() + ".\n");
         } // Sending view about update if direction player is facing has changed.
         if(mov.getCurrPlayer().hasWon())
         {
-            view.displayWinner(curr.getColour().toString(), curr.getPlayerName()); // Displaying player win
+            view.displayText("Congratulations "+curr.getColour().toString()+"!\nYour "+curr.getPlayerName()+" Turtle has captured a Jewel. You have WON!!!");
         }
     }
 
@@ -77,6 +77,6 @@ public class GameController {
             playRound();
             view.displayBoard(converter.parseJewels(), converter.parseTurtles(), dimensions);
         }
-        view.displayGameOver(); // Game has ended and display message is shown
+        view.displayText("Congratulations everyone has won!\n\n-----------------------"); // Game has ended and display message is shown
     }
 }

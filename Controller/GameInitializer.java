@@ -38,7 +38,7 @@ public class GameInitializer
             return true;
         }
 
-        view.displayGoodbye();
+        view.displayText("Thanks for playing!");
         return false;
     }
 
