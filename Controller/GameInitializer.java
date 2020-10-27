@@ -15,13 +15,12 @@ public class GameInitializer
     private GameView view;
     private int nPlayers;
     private Scanner input;
-    private BoardConverter converter;
 
     public GameInitializer(GameView mainView)
     {
         input = new Scanner(System.in);
         view = mainView;
-        view.displayWelcome();
+        view.displayText("Welcome to Robot Turtles");
     }
 
     public boolean start()
@@ -29,12 +28,13 @@ public class GameInitializer
         view.displayPrompt ("Game Menu\n1) Play a Game\n2) Exit\n\nEnter Choice: ");
         if (input.nextInt() == 1) // Process of collecting input from players begins if user chooses 1
         {
-            view.displayPrompt("Enter number of players (1-4): ");
-            nPlayers = input.nextInt(); // TODO - constrain input (1-4)
-            createPlayers(nPlayers); // Method to gather player info through system input and initialize TurtleMasters
-            createBoard(nPlayers);// Instantiating board with jewels and player tiles
-            GameModel model = newGame(); // Initializing game model
-            converter = new BoardConverter(model.getBoard());
+            nPlayers = 0;
+            while (nPlayers < 1 || nPlayers > 4){
+                view.displayPrompt("Enter number of players (1-4): ");
+                nPlayers = input.nextInt();
+            }            
+            createPlayers(); // Method to gather player info through system input and initialize TurtleMasters
+            createBoard();// Instantiating board with jewels and player tiles
             return true;
         }
 
@@ -42,13 +42,13 @@ public class GameInitializer
         return false;
     }
 
-    public void createBoard(int numPlayers)
+    public void createBoard()
     {
         List<Jewel> jewls = createJewels(initPlayers);
         initBoard = new Board(SIZE, initPlayers, jewls);
     }
 
-    public void createPlayers(int n)
+    public void createPlayers()
     {
         // Creates list of n players and assigns each player's piece to a corner coordinate
         List<Coordinate> locations = cornerCoordinates();
@@ -57,9 +57,9 @@ public class GameInitializer
         Direction currDir;
 
         // Assigning each player to a new Turtle and adding to list of players
-        for(int i = 0; i < n; i++)
+        for(int i = 0; i < nPlayers; i++)
         {
-            currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);
+            currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);            // TODO - ok, but perhaps have each turtle with different direction
             TurtleMaster newPlayer = new TurtleMaster(locations.get(i), colours[i], currDir);
             view.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
             namePlayer(newPlayer, input.next()); // Prompting each player for their name

@@ -15,25 +15,26 @@ public class GameController {
     public GameController(){
         view = new GameView();
         input = new Scanner (System.in);
-        view.displayWelcome();
     }
 
-    public void initializeGame(){
+    public boolean initializeGame(){
         // Method to call initializer to assign players to turtles and populate board with tiles
         GameInitializer initGame = new GameInitializer(view);
-        initGame.start();
+        if (!initGame.start())
+            return false;
         model = initGame.newGame();
         converter = new BoardConverter(model.getBoard());
+        return true;
     }
 
     public Move promptMove(TurtleMaster player)
     {
         // Prompting player for move by requesting input
-        Scanner sc = new Scanner(System.in);
-        System.out.println(player.getPlayerName() + " - Enter move card...\n [LEFT, RIGHT, FORWARD, BUG]:");
-        String response = sc.nextLine().toUpperCase();
-        Card input = (model.moveList().contains(response)) ? Card.valueOf(response) : null;
-        Move result = new Move(player, input, model.getBoard());
+        // Scanner sc = new Scanner(System.in);
+        view.displayPrompt(player.getPlayerName() + " - Enter move card...\n [LEFT, RIGHT, FORWARD, BUG]: ");
+        String response = input.nextLine().toUpperCase();
+        Card choice = (model.moveList().contains(response)) ? Card.valueOf(response) : null;
+        Move result = new Move(player, choice, model.getBoard());
 
         if(model.validate(result)) {return result;} // Move is executed on board if valid according to model
         else {System.out.println("Sorry, " + player.getPlayerName() + ", but that move is invalid." );}
@@ -81,5 +82,5 @@ public class GameController {
         view.displayGameOver();
     }
 
-    public GameView getView() {return view;}
+    public GameView getView() {return view;} // TODO - why?
 }
