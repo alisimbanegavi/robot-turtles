@@ -9,9 +9,7 @@ import java.util.*;
 public class TestGame {
     public static void main(String[] args) {
         GameController control = new GameController();
-        control.initializeGame();
-        control.playGame();
-
-        System.out.println("Program Ended");
+        if (control.initializeGame())
+            control.playGame();
     }
 }
