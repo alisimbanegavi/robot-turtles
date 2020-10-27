@@ -76,16 +76,16 @@ public class Board
         turtles.remove((Turtle)winner); // Remove player from board
     }
 
-    public Coordinate newCoord(Coordinate orig, Direction di)
+    public Coordinate nextCoord(Coordinate orig, Direction di)
     {
         // Calculates new coordinate based on shift in particular direction
         Coordinate newC = orig.copy();
         if ((di == Direction.NORTH) || (di == Direction.SOUTH)) // Condition for vertical chg
         {
-            newC.setX((di == Direction.NORTH) ? orig.getY() - 1: orig.getY() + 1); // Chg vertical position by -1 if moving north and +1 if moving south
+            newC.setY((di == Direction.NORTH) ? orig.getY() - 1: orig.getY() + 1); // Chg vertical position by -1 if moving north and +1 if moving south
         }else // Condition for horizontal change
         {
-            newC.setX((di == Direction.EAST) ? orig.getX() - 1: orig.getX() + 1); // Chg horizontal position by -1 if moving west and +1 if moving east
+            newC.setX((di == Direction.EAST) ? orig.getX() + 1: orig.getX() - 1); // Chg horizontal position by -1 if moving west and +1 if moving east
         }
         return newC;
     }

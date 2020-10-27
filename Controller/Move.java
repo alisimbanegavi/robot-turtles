@@ -12,13 +12,8 @@ public class Move
     private Card instruction;
     private Direction currDirection;
     private Board gBoard;
-
-    private static final Map<Direction, Integer> moveDirs = Map.of(
-            Direction.NORTH, -1,
-            Direction.SOUTH, +1,
-            Direction.EAST, -1,
-            Direction.WEST, +1
-    ); // Mapping directions to corresponding number for change to an index if moving in a particular direction
+    private boolean bugCard;
+    // Mapping directions to corresponding number for change to an index if moving in a particular direction
 
     public Move(TurtleMaster t, Card input, Board target)
     {
@@ -27,6 +22,7 @@ public class Move
         instruction = input;
         currDirection = t.getDir();
         gBoard = target;
+        bugCard = (input == Card.BUG);
     }
 
     public TurtleMaster getCurrPlayer()
@@ -42,6 +38,8 @@ public class Move
     public void execute()
     {
         // Executing move requested by player
+        if(!bugCard) {player.addToCardSeq(instruction);} // Adding to sequence of player's executed cards if not bug
+
         if (instruction == Card.FORWARD) {step();} // Step forward
         else if (instruction == Card.BUG) {bug();} // Bug card
         else {rotate(instruction);} // Turn left or right
@@ -51,7 +49,7 @@ public class Move
     {
         // Calculating new coordinate and performing shift
         Coordinate orig = player.getCoord();
-        Coordinate next = gBoard.newCoord(orig, currDirection);
+        Coordinate next = gBoard.nextCoord(orig, currDirection);
         if(checkForJewel(next)) {gBoard.markWinner(player);}
         gBoard.shiftTile(orig, next);
     }
@@ -84,7 +82,7 @@ public class Move
         {
             Card buggy = player.removeFromSeq(); // Last card executed
 
-            if (buggy.equals(Card.FORWARD)) {bugStep();}
+            if (buggy == Card.FORWARD) {bugStep();}
             else {bugRotate(buggy);}
         }
     }
@@ -99,6 +97,7 @@ public class Move
     public void bugStep()
     {
         // Helper method for bug() if last card executed by player was forward step
+        Direction backwards = reverseDirection(); // Getting opposite direction of last step forward
         Direction saveDir = currDirection;
         player.setDirection(reverseDirection());
         step(); // Turtle takes step in direction opposite from the one they are facing

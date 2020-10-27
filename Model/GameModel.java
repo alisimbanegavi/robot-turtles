@@ -31,7 +31,7 @@ public class GameModel
 
         Turtle currPlayer = chg.getCurrPlayer();
         Direction currDir = currPlayer.getDir();
-        Coordinate test = board.newCoord(currPlayer.getCoord(), currDir);
+        Coordinate test = board.nextCoord(currPlayer.getCoord(), currDir);
 
         return ((!test.outBounds(maxSize)) && (board.isEmpty(test)));
         // Valid move if new coordinate is in bounds and space is empty
