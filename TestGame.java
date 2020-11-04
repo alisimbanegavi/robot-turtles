@@ -9,7 +9,6 @@ import java.util.*;
 public class TestGame {
     public static void main(String[] args) {
         GameController control = new GameController();
-        if (control.initializeGame())
-            control.playGame();
+        if (control.initializeGame()) control.playGame();
     }
 }
