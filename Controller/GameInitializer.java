@@ -29,7 +29,6 @@ public abstract class GameInitializer {
             GameView.displayPrompt("Enter number of players (1-4): ");
             nPlayers = input.nextInt();
         }
-        input.close();
         return new Board (createTurtles(nPlayers), createJewels(nPlayers));
     }
 
@@ -49,7 +48,6 @@ public abstract class GameInitializer {
             name = input.next();            
             playerList.add(new Player(locations[i], colours[i], directions[i], name));
         }
-        input.close();
         return playerList;
     }
 

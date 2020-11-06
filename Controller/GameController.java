@@ -66,7 +66,7 @@ public class GameController {
      */
     private void playTurn(){
         Turtle currentPlayer = game.getCurrentPlayer();
-        GameView.displayPrompt( currentPlayer.getName() + " your " + 
+        GameView.displayText (  currentPlayer.getName() + " your " + 
                                 currentPlayer.getColour().name() + " turtle is facing " + 
                                 currentPlayer.getDir().name());
 
