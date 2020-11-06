@@ -1,7 +1,4 @@
-import Model.*;
-import View.*;
-import Controller.*;
-import java.util.*;
+import Controller.GameController;
 
 /**
  * Tester class for game
@@ -9,6 +6,6 @@ import java.util.*;
 public class TestGame {
     public static void main(String[] args) {
         GameController control = new GameController();
-        if (control.initializeGame()) control.playGame();
+        while (control.initializeGame()) control.playGame();
     }
 }
