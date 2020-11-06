@@ -27,18 +27,26 @@ public abstract class GameModel
     public Turtle []        getTurtles       () { return players.toArray (new Turtle [players.size()]);}
  
     // Modifiers
-    public void move (Card choice){
-        if (choice == Card.BUG)         undo();
+    public boolean move (Card choice){
+        Turtle currentPlayer = players.peek();
+            
+        boolean vaildmove = true;
+        if (choice == Card.BUG)         vaildmove = undo();
         else {
-            if (choice == Card.FORWARD) forward();
-            else                        rotate(choice);
-
-            Turtle currentPlayer = players.peek();
+            if (choice == Card.FORWARD) vaildmove = forward();
+            else                               rotate(choice);
             currentPlayer.addMove(choice);
         }
+        
+        if(vaildmove){    
+            players.removeFirst();
+            if(!currentPlayer.hasWon()) players.add(currentPlayer);
+            if(jewels.isEmpty()) finished = true;
+        }
+        return vaildmove;
     }
 
-    private void forward (){
+    private boolean forward (){
         Turtle currentPlayer = players.peek();
         Coordinate currCoord = currentPlayer.getCoordinate();
         Coordinate moveCoord;
@@ -55,7 +63,7 @@ public abstract class GameModel
             while (playerItr.hasNext() & !collision) // Check it does not have same coord as other players     
                 collision = playerItr.next().getCoordinate().equals(moveCoord);
             
-            if(!collision){
+            if (!collision){
                 Iterator <ColouredTile> jewelItr = jewels.iterator();
                 while (jewelItr.hasNext())
                     if (jewelItr.next().getCoordinate().equals(moveCoord)){
@@ -63,8 +71,10 @@ public abstract class GameModel
                         jewelItr.remove();
                     } 
                 currentPlayer.setCoordinate(moveCoord);
+                return true;
             }
         }
+        return false;
     }
 
     private void rotate (Card card){
@@ -83,9 +93,12 @@ public abstract class GameModel
         }
     }
 
-    private void undo (){
+    private boolean undo (){
         Turtle currentPlayer = players.peek();
         Card previousMove = currentPlayer.getMove();
+        if(previousMove == null) 
+            return false;
+        
         if (previousMove == Card.FORWARD){
             Coordinate currCoord = currentPlayer.getCoordinate();
             if      (currentPlayer.getDir() == Direction.NORTH) currentPlayer.setCoordinate( new Coordinate(currCoord.getX(), currCoord.getY()+1));   
@@ -95,6 +108,7 @@ public abstract class GameModel
         }
         else if (previousMove == Card.LEFT)  rotate(Card.RIGHT);
         else if (previousMove == Card.RIGHT) rotate(Card.LEFT);
+        return true;
     }
 
 }
