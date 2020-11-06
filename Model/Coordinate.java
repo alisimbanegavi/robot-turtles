@@ -2,34 +2,16 @@ package Model;
 
 public class Coordinate
 {
-    private int xPos;
-    private int yPos;
+    private int x, y;
 
-    public Coordinate(int x, int y)
-    {
-        setX(x);
-        setY(y);
+    public Coordinate(int x, int y){
+        this.x = x;
+        this.y = y;
     }
 
-    public void setX(int x)
-    {
-        xPos = x;
-    }
+    public int getX(){ return x; }
 
-    public void setY(int y)
-    {
-        yPos = y;
-    }
-
-    public int getX()
-    {
-        return xPos;
-    }
-
-    public int getY()
-    {
-        return yPos;
-    }
+    public int getY(){ return y; }
 
     @Override
     public boolean equals(Object other){
@@ -37,17 +19,15 @@ public class Coordinate
         if (!(other instanceof Coordinate)) return false;
 
         Coordinate tmp = (Coordinate) other;
-        return this.xPos == tmp.xPos && this.yPos == tmp.yPos;
+        return this.x == tmp.x && this.y == tmp.y;
     }
 
-    public Coordinate copy()
-    {
+    public Coordinate copy() {
         // Returns deep copy of coordinate
-        return new Coordinate(xPos, yPos);
+        return new Coordinate(x, y);
     }
 
-    public boolean outBounds(int MAX)
-    {
-        return xPos < 0 || xPos >= MAX || yPos < 0 || yPos >= MAX;
+    public boolean outBounds(int MAX) {
+        return x < 0 || x >= MAX || y < 0 || y >= MAX;
     }
 }

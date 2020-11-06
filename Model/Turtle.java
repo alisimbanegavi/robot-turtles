@@ -2,54 +2,33 @@ package Model;
 
 import java.util.Stack;
 
-public class Turtle extends Tile {
-    private Direction dir = null;
+public abstract class Turtle extends ColouredTile {
     private String name;
-    private Stack<Card> cardSequence;
-    private boolean winner;
+    private Stack<Card> moves;
+    private Direction direction;
+    private boolean capturedJewel = false;
 
-    public Turtle(Coordinate c, Colour colour, Direction d) {
-        super(c);
-        setCol(colour);
-        setDir(d);
-        cardSequence = new Stack<>();
-        winner = false;
+    public Turtle(Coordinate coord, Colour colour, Direction dir, String name) {
+        super(coord, colour);
+        this.direction = dir;
+        this.name = name;
+        this.moves = new Stack<>();
     }
 
-    public void setDir(Direction new_dir) {
-        dir = new_dir;
+    // Accessors
+    public Boolean      hasWon   () { return capturedJewel; }
+    public Direction    getDir   () { return direction; }
+    public String       getName  () { return name; }
+    public Stack<Card>  getMoves () { return moves; }
+
+    // Modifiers
+    public void setDir(Direction newDirection) {
+        direction = newDirection;
     }
 
-    public Direction getDir() {
-        return dir;
+    public void addMove (Card move){
+        moves.push(move);
     }
 
-    public void setPlayerName(String n)
-    {
-        name = n;
-    }
-
-    public String getPlayerName() { return name;}
-
-    public Boolean hasWon() { return winner;}
-
-    public Stack<Card> cardSeq()
-    {
-        // Returns sequence of cards executed by player
-        return cardSequence;
-    }
-
-    public void addToCardSeq(Card toAdd)
-    {
-        cardSequence.push(toAdd);
-    }
-
-    public Card removeFromSeq()
-    {
-        // Getting last card move executed by player
-        if (cardSequence.size() > 0) {return cardSequence.pop();}
-        return null;
-    }
-
-    public void won() {winner = true;}
+    public void won() { capturedJewel = true; }
 }
