@@ -6,7 +6,7 @@
 
 package Controller;
 import Model.*;
-import View.*;
+import View.GameView;
 import java.util.*;
 
 /**

@@ -6,45 +6,44 @@
 
 package Controller;
 import Model.Board;
+import Model.ColouredTile;
 import Model.Coordinate;
-import Model.Jewel;
+import Model.GameModel;
 import Model.Turtle;
-
-import java.util.*;
 
 /**
  * Class for parsing board configuration to game view. This class allows for the configuration of the Board, which is contained
  * in the model, to be passed onto the view without contaminating the view by having it access the model directly.
  */
 public class BoardConverter {
-    private Board gameBoard;
+    private GameModel game;
 
     public BoardConverter(Board reference){
-        gameBoard = reference;
+        game = reference;
     }
 
     public int [][] parseJewels()
     {
-        List<Jewel> jwls = gameBoard.getJewels();
-        int [][] results = new int [jwls.size()][3];
-        for (int i = 0; i < jwls.size(); i++){
-            Coordinate coord = jwls.get(i).getCoord();
+        ColouredTile [] jewels = game.getJewels();
+        int [][] results = new int [jewels.length][3];
+        for (int i = 0; i < jewels.length; i++){
+            Coordinate coord = jewels[i].getCoordinate();
             results[i][0] = coord.getX();
             results[i][1] = coord.getY();
-            results[i][2] = jwls.get(i).getCol().ordinal();
+            results[i][2] = jewels[i].getColour().ordinal();
         }
         return results;
     }
 
     public int [][] parseTurtles(){
-        List<Turtle> trtls = gameBoard.getTurtles();
-        int [][] results = new int [trtls.size()][4];
-        for (int i = 0; i < trtls.size(); i++){
-            Coordinate coord = trtls.get(i).getCoord();
+        Turtle [] turtles = game.getTurtles();
+        int [][] results = new int [turtles.length][3];
+        for (int i = 0; i < turtles.length; i++){
+            Coordinate coord = turtles[i].getCoordinate();
             results[i][0] = coord.getX();
             results[i][1] = coord.getY();
-            results[i][2] = trtls.get(i).getCol().ordinal();
-            results[i][3] = trtls.get(i).getDir().ordinal();
+            results[i][2] = turtles[i].getColour().ordinal();
+            results[i][3] = turtles[i].getDir().ordinal();
         }
         return results;
     }

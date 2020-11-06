@@ -1,116 +1,84 @@
 package Controller;
 
-import Model.*;
-import View.*;
-import java.util.*;
+import View.GameView;
+
+import Model.Board;
+import Model.Colour;
+import Model.ColouredTile;
+import Model.Coordinate;
+import Model.Direction;
+import Model.Jewel;
+import Model.Player;
+import Model.Turtle;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
 
 /**
  * Class to initialize game by assigning players and populating board
  */
-public class GameInitializer
-{
-    private static final int SIZE = 8;
-    private List<Turtle> initPlayers;
-    private Board initBoard;
-    private GameView view;
-    private int nPlayers;
-    private Scanner input;
-
-    public GameInitializer(GameView mainView)
-    {
-        input = new Scanner(System.in);
-        view = mainView;
-    }
-
-    public boolean start()
-    {
-        view.displayText("Welcome to ROBOT TURTLES!");
-        view.displayPrompt ("GAME MENU:\n1) Play a Game\n2) Exit\n\nEnter Choice: ");
-        try {
-            if (input.nextInt() == 1) // Process of collecting input from players begins if user chooses 1
-            {
-                nPlayers = 0;
-                while (nPlayers < 1 || nPlayers > 4) { // Prompting repeatedly until number of players inputted is between 1 and 4
-                    view.displayPrompt("Enter number of players (1-4): ");
-                    nPlayers = input.nextInt();
-                }
-                createBoard();// Instantiating board with jewels and player tiles
-                return true;
-            }
-        }catch (InputMismatchException in) // Handling exception if input is not numeric
-        {
-            view.displayText("Sorry but your input must be a number! Please try again.");
+public abstract class GameInitializer {
+    
+    public static Board createGame(){
+        Scanner input = new Scanner (System.in);
+        int nPlayers = 0;
+        while (nPlayers < 1 || nPlayers > 4) { // Prompt until valid answer is given
+            GameView.displayPrompt("Enter number of players (1-4): ");
+            nPlayers = input.nextInt();
         }
-        view.displayText("Goodbye!");
-        return false;
+        input.close();
+        return new Board (createTurtles(nPlayers), createJewels(nPlayers));
     }
 
-    public void createBoard()
-    {
-        createPlayers();
-        initBoard = new Board(SIZE, initPlayers, createJewels(initPlayers));
-    }
-
-    public void createPlayers()
-    {
+    private static ArrayDeque<Turtle> createTurtles(int nPlayers) {
+        Scanner input = new Scanner (System.in);
+        
         // Creates list of n players and assigns each player's piece to a corner coordinate
-        List<Coordinate> locations = cornerCoordinates();
-        List<Turtle> playerList = new ArrayList<>();
-        Direction currDir;
+        Colour[] colours = Colour.values();
+        Direction[] directions = Direction.values();
+        Coordinate[] locations = cornerCoordinates();
+        ArrayDeque<Turtle> playerList = new ArrayDeque<Turtle>();
 
         // Assigning each player to a new Turtle and adding to list of players
-        for(int i = 0; i < nPlayers; i++)
-        {
-            // Gathering player info through system input and initialize Turtles
-            currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);
-            Turtle newPlayer = new Turtle(locations.get(i), Colour.values()[i], currDir);
-            view.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
-            newPlayer.setPlayerName(input.next()); // Prompting each player for their name and setting
-            playerList.add(newPlayer);
+        String name;
+        for(int i = 0; i < nPlayers; i++) {
+            GameView.displayPrompt("Enter Player "+(i+1)+"'s name: ");
+            name = input.next();            
+            playerList.add(new Player(locations[i], colours[i], directions[i], name));
         }
-        initPlayers = playerList;
+        input.close();
+        return playerList;
     }
 
-    public List<Jewel> createJewels(List<Turtle> players)
+    private static ArrayList<ColouredTile> createJewels(int nPlayers)
     {
         // List of jewels generated for each player with coordinates assigned to center
-        List<Jewel> jwls = new ArrayList<>();
-        List<Coordinate> cntr = centerCoordinates();
-        int count = 0;
-
-        for(Turtle p: players)
-        {
-            jwls.add(new Jewel(cntr.get(count), p.getCol()));
-            count++;
-        }
-        return jwls;
+        Colour[] colours = Colour.values();
+        Coordinate[] locations = centerCoordinates();
+        ArrayList<ColouredTile> jewels = new ArrayList<>();
+        
+        for(int i = 0; i < nPlayers; i++)
+            jewels.add(new Jewel(locations[i], colours[i]));
+        return jewels;
     }
 
-    public List<Coordinate> cornerCoordinates()
-    {
+    private static Coordinate [] cornerCoordinates() {
         // Generating list of corner coordinates
-        List<Coordinate> corners = new ArrayList<>();
-        corners.add(new Coordinate(0, 0)); // Northwest corner
-        corners.add(new Coordinate(0, SIZE - 1)); // Northeast corner
-        corners.add(new Coordinate(SIZE - 1, 0)); // Southest corner
-        corners.add(new Coordinate(SIZE - 1, SIZE - 1)); // Southwest corner
-
+        Coordinate[] corners = { new Coordinate(0, 0),                                       // Northwest corner
+                                 new Coordinate(0, Board.DIMENSIONS - 1),                    // Southwest corner
+                                 new Coordinate(Board.DIMENSIONS - 1, Board.DIMENSIONS - 1), // Southeast corner
+                                 new Coordinate(Board.DIMENSIONS - 1, 0)};                   // Northeast corner
         return corners;
     }
 
-    public List<Coordinate> centerCoordinates()
-    {
-        List<Coordinate> center = new ArrayList<>();
-        center.add(new Coordinate((SIZE/2)-1, (SIZE/2)-1)); // Northwest center corner
-        center.add(new Coordinate((SIZE/2)-1, (SIZE/2))); // Northeast center corner
-        center.add(new Coordinate((SIZE/2), ((SIZE/2)-1))); // Southeast center corner
-        center.add(new Coordinate((SIZE/2), (SIZE/2))); // Southwest center corner
-
+    private static Coordinate[] centerCoordinates() {
+        Coordinate[] center = { new Coordinate((Board.DIMENSIONS/2)-1,   (Board.DIMENSIONS/2)-1),    // Northwest center corner
+                                new Coordinate((Board.DIMENSIONS/2)-1,   (Board.DIMENSIONS/2)),      // Southwest center corner
+                                new Coordinate((Board.DIMENSIONS/2),     (Board.DIMENSIONS/2)),      // Southeast center corner
+                                new Coordinate((Board.DIMENSIONS/2),     (Board.DIMENSIONS/2)-1)};   // Northeast center corner
         return center;
-    }
-
-    public GameModel newGame()
-    {
-        return new GameModel(initPlayers, initBoard);
     }
 }
