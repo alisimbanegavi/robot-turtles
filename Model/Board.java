@@ -7,9 +7,6 @@ import java.util.ArrayList;
  */
 public class Board extends GameModel{
     public Board(ArrayDeque<Turtle> players, ArrayList<ColouredTile> jewels ) {
-        super(players, jewels);
+        super(players, jewels);   
     }
-    
-    // @Override
-    // public getJewels
 }
