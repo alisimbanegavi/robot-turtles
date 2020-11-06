@@ -19,7 +19,7 @@ public abstract class Turtle extends ColouredTile {
     public Boolean      hasWon   () { return capturedJewel; }
     public Direction    getDir   () { return direction; }
     public String       getName  () { return name; }
-    public Stack<Card>  getMoves () { return moves; }
+    public Card         getMove  () { return (moves.isEmpty())? null : moves.pop(); }
 
     // Modifiers
     public void setDir(Direction newDirection) {

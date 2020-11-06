@@ -22,10 +22,10 @@ public class Coordinate
         return this.x == tmp.x && this.y == tmp.y;
     }
 
-    public Coordinate copy() {
-        // Returns deep copy of coordinate
-        return new Coordinate(x, y);
-    }
+    // public Coordinate copy() {
+    //     // Returns deep copy of coordinate
+    //     return new Coordinate(x, y);
+    // }
 
     public boolean outBounds(int MAX) {
         return x < 0 || x >= MAX || y < 0 || y >= MAX;

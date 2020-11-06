@@ -3,8 +3,7 @@ package View;
 /**
  * GameView class for display
  */
-public final class GameView {
-    private GameView(){}
+public abstract class GameView {
 
     public static void displayText(String txt){
         System.out.println(txt);

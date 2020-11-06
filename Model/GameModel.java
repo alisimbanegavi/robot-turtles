@@ -1,73 +1,100 @@
 package Model;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Class for game model used to check rules
  */
-public class GameModel
+public abstract class GameModel
 {
+    public static final int DIMENSIONS = 8;
+
     private ArrayDeque<Turtle> players;
-    private Board board;
-    private int maxSize;
-    private boolean complete;
+    private ArrayList <ColouredTile> jewels;
+    private boolean finished = false;
 
-    public GameModel(List<Turtle> tMasters, Board b)
-    {
-        board = b;
-        players = new ArrayDeque<>(tMasters);
-        complete = false;
-        maxSize = b.getSize();
+    public GameModel(ArrayDeque<Turtle> players, ArrayList<ColouredTile> jewels) {
+        this.players = players;
+        this.jewels = jewels;
     }
 
-    public boolean validate(Move chg)
-    {
-        // Checking if move is valid based on index of turtle's position on board and direction of turtle
-        if (chg.getCard() == null) {return false;} // Move is automatically invalid if null
-        Card shift = chg.getCard();
+    // Accessors
+    public Boolean          isOver           () { return finished;}
+    public Turtle           getCurrentPlayer () { return players.peek();}
+    public ColouredTile[]   getJewels        () { return jewels.toArray  (new ColouredTile [jewels.size()]);}
+    public Turtle []        getTurtles       () { return players.toArray (new Turtle [players.size()]);}
+ 
+    // Modifiers
+    public void move (Card choice){
+        if (choice == Card.BUG)         undo();
+        else {
+            if (choice == Card.FORWARD) forward();
+            else                        rotate(choice);
 
-        if (shift == Card.BUG){return validBug(chg);} // Check for valid bug if bug card is inputted
-
-        if((shift == Card.LEFT) || (shift == Card.RIGHT)) {return true;}
-        // Move is automatically valid if move is a left turn or right turn
-
-        Turtle currPlayer = chg.getCurrPlayer();
-        Coordinate test = board.coordAhead(currPlayer.getCoord(), currPlayer.getDir()); // Getting coordinate ahead of player if they would like to step forward
-
-        return ((!test.outBounds(maxSize)) && (board.isEmpty(test) || (board.checkForJewel(test))));
-        // Valid move if new coordinate is in bounds and space is empty OR is jewel
-    }
-
-    public boolean validBug(Move chg)
-    {
-        // Method to test is bug card move is valid based on index of turtle's position on board and direction of turtle
-        if (chg.getCard() != Card.BUG) {return false;} // False if bug card is not being evaluated
-
-        Turtle toBug = chg.getCurrPlayer();
-        if(toBug.cardSeq().peek() == Card.FORWARD) // Test if bug card is requesting move backwards
-        {
-            Coordinate test = board.coordBehind(toBug.getCoord(), toBug.getDir()); // Testing coordinate behind bug
-            return (board.isEmpty(test) || !(board.getTileAtPos(test) instanceof Turtle)); // True if space is empty or not another turtle
+            Turtle currentPlayer = players.peek();
+            currentPlayer.addMove(choice);
         }
-        return true; // Automatically true if bug card is reversing right or left turn
     }
 
-    public boolean gameOver(){return complete;} //  Checking if game is over
+    private void forward (){
+        Turtle currentPlayer = players.peek();
+        Coordinate currCoord = currentPlayer.getCoordinate();
+        Coordinate moveCoord;
 
-    public ArrayDeque<Turtle> getPlayers() {return players;} // Returns queue of players
+        if      (currentPlayer.getDir() == Direction.NORTH) moveCoord = new Coordinate(currCoord.getX(), currCoord.getY()-1);   
+        else if (currentPlayer.getDir() == Direction.SOUTH) moveCoord = new Coordinate(currCoord.getX(), currCoord.getY()+1);
+        else if (currentPlayer.getDir() == Direction.EAST)  moveCoord = new Coordinate(currCoord.getX()+1, currCoord.getY());
+        else                                                moveCoord = new Coordinate(currCoord.getX()-1, currCoord.getY()); 
+                                        
+        if (!moveCoord.outBounds(DIMENSIONS)){  
+            boolean collision = false;
+            Iterator <Turtle> playerItr = players.iterator();
+            playerItr.next(); // Skips current player
+            while (playerItr.hasNext() & !collision) // Check it does not have same coord as other players     
+                collision = playerItr.next().getCoordinate().equals(moveCoord);
+            
+            if(!collision){
+                Iterator <ColouredTile> jewelItr = jewels.iterator();
+                while (jewelItr.hasNext())
+                    if (jewelItr.next().getCoordinate().equals(moveCoord)){
+                        currentPlayer.won();
+                        jewelItr.remove();
+                    } 
+                currentPlayer.setCoordinate(moveCoord);
+            }
+        }
+    }
 
-    public Board getBoard() {return board;} // Returns game board
+    private void rotate (Card card){
+        Turtle currentPlayer = players.peek();
+        if (card == Card.LEFT){
+            if      (currentPlayer.getDir() == Direction.NORTH ) currentPlayer.setDir(Direction.WEST);
+            else if (currentPlayer.getDir() == Direction.WEST)   currentPlayer.setDir(Direction.SOUTH);
+            else if (currentPlayer.getDir() == Direction.SOUTH)  currentPlayer.setDir(Direction.EAST);
+            else                                                 currentPlayer.setDir(Direction.NORTH);
+        }
+        else if (card == Card.RIGHT){
+            if      (currentPlayer.getDir() == Direction.NORTH ) currentPlayer.setDir(Direction.EAST);
+            else if (currentPlayer.getDir() == Direction.EAST)   currentPlayer.setDir(Direction.SOUTH);
+            else if (currentPlayer.getDir() == Direction.SOUTH)  currentPlayer.setDir(Direction.WEST);
+            else                                                 currentPlayer.setDir(Direction.NORTH);
+        }
+    }
 
-    public void updateBoard(Move chg) { // Update details in model after move is executed
-        chg.execute();
-        // Resetting current queue of players in case any players have won and left game after a move
-        if (chg.getCurrPlayer().hasWon()) {players = new ArrayDeque<>(chg.checkBoard().getTurtles());}
-        if (players.size() == 0) {complete = true;} // Mark game complete if all players have collected their jewels and board is empty
-    } // Updates board if valid move is executed while keeping track of whether or not game is over
-
-    public List<String> moveList() {return List.of("LEFT", "RIGHT", "FORWARD", "BUG");}
-    // Helper method to return card instructions as strings; will help with parsing user input in GameController.promptMove()
-
-    public int getMaxSize() {return maxSize;} // Returns maximum size of board according to model
+    private void undo (){
+        Turtle currentPlayer = players.peek();
+        Card previousMove = currentPlayer.getMove();
+        if (previousMove == Card.FORWARD){
+            Coordinate currCoord = currentPlayer.getCoordinate();
+            if      (currentPlayer.getDir() == Direction.NORTH) currentPlayer.setCoordinate( new Coordinate(currCoord.getX(), currCoord.getY()+1));   
+            else if (currentPlayer.getDir() == Direction.SOUTH) currentPlayer.setCoordinate( new Coordinate(currCoord.getX(), currCoord.getY()-1));
+            else if (currentPlayer.getDir() == Direction.EAST)  currentPlayer.setCoordinate( new Coordinate(currCoord.getX()-1, currCoord.getY()));
+            else                                                currentPlayer.setCoordinate( new Coordinate(currCoord.getX()+1, currCoord.getY()));  
+        }
+        else if (previousMove == Card.LEFT)  rotate(Card.RIGHT);
+        else if (previousMove == Card.RIGHT) rotate(Card.LEFT);
+    }
 
 }
