@@ -52,7 +52,7 @@ public class GameController {
         Card choice = null;
         while (choice == null){
             GameView.displayPrompt(player.getName() + " - Enter move card [LEFT, RIGHT, FORWARD, BUG]: ");
-            String response = input.nextLine(); 
+            String response = input.next(); 
             if      (response.equalsIgnoreCase("left"))     choice = Card.LEFT;
             else if (response.equalsIgnoreCase("right"))    choice = Card.RIGHT;
             else if (response.equalsIgnoreCase("forward"))  choice = Card.FORWARD;
@@ -66,7 +66,7 @@ public class GameController {
      */
     private void playTurn(){
         Turtle currentPlayer = game.getCurrentPlayer();
-        GameView.displayText (  currentPlayer.getName() + " your " + 
+        GameView.displayText (  currentPlayer.getName() + " (Player "+ (currentPlayer.getColour().ordinal()+1) +") your " + 
                                 currentPlayer.getColour().name() + " turtle is facing " + 
                                 currentPlayer.getDir().name());
 
