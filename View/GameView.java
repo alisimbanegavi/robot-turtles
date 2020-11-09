@@ -12,6 +12,30 @@ import java.util.Scanner;
 public abstract class GameView {
     private static final Scanner input = new Scanner(System.in);
 
+    public static int menu(){
+        displayPrompt(
+            "- - - - - - - - - - WELCOME to ROBOT TURTLES - - - - - - - - - - \n" +
+            "GAME MENU:\n1) PLAY GAME\n2) EXIT\n\nENTER CHOICE: "
+        );
+        if (readDigit() == 1){
+            int nPlayers = 0;
+            displayText("");
+            while (nPlayers < 1 || nPlayers > 4){
+                displayPrompt("ENTER NUMBER OF PLAYERS [1-4]: ");
+                nPlayers = readDigit();
+            }                
+            return nPlayers;
+        }
+        displayText("GOODBYE!");
+        return 0;
+    }
+
+    public static String promptMove(String playerInfo, String choices){
+        displayText(playerInfo);
+        displayPrompt(choices);
+        return readText().toUpperCase();
+    }
+
     /**
      * Displays line of text in console
      * @param txt Text to displayer
