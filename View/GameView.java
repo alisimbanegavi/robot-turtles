@@ -3,16 +3,17 @@ package View;
 /**
  * GameView class for display
  */
-public class GameView {
-    public void displayText(String txt){
+public abstract class GameView {
+
+    public static void displayText(String txt){
         System.out.println(txt);
     }
 
-    public void displayPrompt (String prompt){
+    public static void displayPrompt (String prompt){
         System.out.print(prompt);
     }
 
-    public void displayBoard (int[][] jewels, int [][] players, int size){
+    public static void displayBoard (int[][] jewels, int [][] players, int size){
         char [][] board = new char [size][size];
         for (int y = 0; y < size; y++)
             for (int x = 0; x < size; x++)

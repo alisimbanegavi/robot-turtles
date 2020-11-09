@@ -1,7 +1,4 @@
-import Model.*;
-import View.*;
 import Controller.*;
-import java.util.*;
 
 /**
  * Tester class for game

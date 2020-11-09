@@ -7,51 +7,26 @@ import java.util.*;
 /**
  * Class to initialize game by assigning players and populating board
  */
-public class GameInitializer
+public abstract class GameInitializer
 {
     private static final int SIZE = 8;
-    private List<Turtle> initPlayers;
-    private Board initBoard;
-    private GameView view;
-    private int nPlayers;
-    private Scanner input;
+    private static int nPlayers;
+    private static Scanner input;
 
-    public GameInitializer(GameView mainView)
-    {
+    public GameInitializer(){}
+
+    public static void start(int numPlayers){
         input = new Scanner(System.in);
-        view = mainView;
+        nPlayers = numPlayers;
     }
 
-    public boolean start()
-    {
-        view.displayText("Welcome to ROBOT TURTLES!");
-        view.displayPrompt ("GAME MENU:\n1) Play a Game\n2) Exit\n\nEnter Choice: ");
-        try {
-            if (input.nextInt() == 1) // Process of collecting input from players begins if user chooses 1
-            {
-                nPlayers = 0;
-                while (nPlayers < 1 || nPlayers > 4) { // Prompting repeatedly until number of players inputted is between 1 and 4
-                    view.displayPrompt("Enter number of players (1-4): ");
-                    nPlayers = input.nextInt();
-                }
-                createBoard();// Instantiating board with jewels and player tiles
-                return true;
-            }
-        }catch (InputMismatchException in) // Handling exception if input is not numeric
-        {
-            view.displayText("Sorry but your input must be a number! Please try again.");
-        }
-        view.displayText("Goodbye!");
-        return false;
+    public static GameModel newGame() {
+        List<Turtle> initPlayers = createPlayers();
+        List<Jewel> initJewels = createJewels(initPlayers);
+        return new GameModel(initPlayers, initJewels);
     }
 
-    public void createBoard()
-    {
-        createPlayers();
-        initBoard = new Board(SIZE, initPlayers, createJewels(initPlayers));
-    }
-
-    public void createPlayers()
+    public static List<Turtle> createPlayers()
     {
         // Creates list of n players and assigns each player's piece to a corner coordinate
         List<Coordinate> locations = cornerCoordinates();
@@ -64,14 +39,14 @@ public class GameInitializer
             // Gathering player info through system input and initialize Turtles
             currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);
             Turtle newPlayer = new Turtle(locations.get(i), Colour.values()[i], currDir);
-            view.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
+            GameView.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
             newPlayer.setPlayerName(input.next()); // Prompting each player for their name and setting
             playerList.add(newPlayer);
         }
-        initPlayers = playerList;
+        return playerList;
     }
 
-    public List<Jewel> createJewels(List<Turtle> players)
+    public static List<Jewel> createJewels(List<Turtle> players)
     {
         // List of jewels generated for each player with coordinates assigned to center
         List<Jewel> jwls = new ArrayList<>();
@@ -80,13 +55,13 @@ public class GameInitializer
 
         for(Turtle p: players)
         {
-            jwls.add(new Jewel(cntr.get(count), p.getCol()));
+            jwls.add(new Jewel(cntr.get(count), p.getColour()));
             count++;
         }
         return jwls;
     }
 
-    public List<Coordinate> cornerCoordinates()
+    public static List<Coordinate> cornerCoordinates()
     {
         // Generating list of corner coordinates
         List<Coordinate> corners = new ArrayList<>();
@@ -98,7 +73,7 @@ public class GameInitializer
         return corners;
     }
 
-    public List<Coordinate> centerCoordinates()
+    public static List<Coordinate> centerCoordinates()
     {
         List<Coordinate> center = new ArrayList<>();
         center.add(new Coordinate((SIZE/2)-1, (SIZE/2)-1)); // Northwest center corner
@@ -107,10 +82,5 @@ public class GameInitializer
         center.add(new Coordinate((SIZE/2), (SIZE/2))); // Southwest center corner
 
         return center;
-    }
-
-    public GameModel newGame()
-    {
-        return new GameModel(initPlayers, initBoard);
     }
 }

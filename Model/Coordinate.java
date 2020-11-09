@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.*;
 public class Coordinate
 {
     private int xPos;
@@ -31,6 +32,24 @@ public class Coordinate
         return yPos;
     }
 
+    /**
+     * Method to calculate all adjacent neighbour positions for current coordinate
+     * @return HashMap<></> List of all adjacent coordinates
+     */
+    public HashMap<Direction, Coordinate> getAdjacent()
+    {
+        HashMap<Direction, Coordinate> adjMap = new HashMap<>();
+        adjMap.put(Direction.NORTH, new Coordinate(xPos,yPos - 1));
+        adjMap.put(Direction.SOUTH, new Coordinate(xPos,yPos + 1));
+        adjMap.put(Direction.EAST, new Coordinate(xPos + 1,yPos));
+        adjMap.put(Direction.WEST, new Coordinate(xPos - 1,yPos));
+
+        return adjMap;
+    }
+
+    public Coordinate getNeighbour(Direction di) {
+        return getAdjacent().get(di);}
+
     @Override
     public boolean equals(Object other){
         if (this == other) return true;
@@ -40,14 +59,5 @@ public class Coordinate
         return this.xPos == tmp.xPos && this.yPos == tmp.yPos;
     }
 
-    public Coordinate copy()
-    {
-        // Returns deep copy of coordinate
-        return new Coordinate(xPos, yPos);
-    }
-
-    public boolean outBounds(int MAX)
-    {
-        return xPos < 0 || xPos >= MAX || yPos < 0 || yPos >= MAX;
-    }
+    public boolean outBounds(int MAX) {return xPos < 0 || xPos >= MAX || yPos < 0 || yPos >= MAX;}
 }

@@ -5,46 +5,36 @@
  */
 
 package Controller;
-import Model.Board;
-import Model.Coordinate;
-import Model.Jewel;
-import Model.Turtle;
-
+import Model.*;
 import java.util.*;
 
 /**
  * Class for parsing board configuration to game view. This class allows for the configuration of the Board, which is contained
  * in the model, to be passed onto the view without contaminating the view by having it access the model directly.
  */
-public class BoardConverter {
-    private Board gameBoard;
+public abstract class BoardConverter {
+    public BoardConverter(){}
 
-    public BoardConverter(Board reference){
-        gameBoard = reference;
-    }
-
-    public int [][] parseJewels()
+    public static int [][] parseJewels(List<Jewel> jewels)
     {
-        List<Jewel> jwls = gameBoard.getJewels();
-        int [][] results = new int [jwls.size()][3];
-        for (int i = 0; i < jwls.size(); i++){
-            Coordinate coord = jwls.get(i).getCoord();
+        int [][] results = new int [jewels.size()][3];
+        for (int i = 0; i < jewels.size(); i++){
+            Coordinate coord = jewels.get(i).getCoord();
             results[i][0] = coord.getX();
             results[i][1] = coord.getY();
-            results[i][2] = jwls.get(i).getCol().ordinal();
+            results[i][2] = jewels.get(i).getColour().ordinal();
         }
         return results;
     }
 
-    public int [][] parseTurtles(){
-        List<Turtle> trtls = gameBoard.getTurtles();
-        int [][] results = new int [trtls.size()][4];
-        for (int i = 0; i < trtls.size(); i++){
-            Coordinate coord = trtls.get(i).getCoord();
+    public static int [][] parseTurtles(List<Turtle> turtles){
+        int [][] results = new int [turtles.size()][4];
+        for (int i = 0; i < turtles.size(); i++){
+            Coordinate coord = turtles.get(i).getCoord();
             results[i][0] = coord.getX();
             results[i][1] = coord.getY();
-            results[i][2] = trtls.get(i).getCol().ordinal();
-            results[i][3] = trtls.get(i).getDir().ordinal();
+            results[i][2] = turtles.get(i).getColour().ordinal();
+            results[i][3] = turtles.get(i).getDir().ordinal();
         }
         return results;
     }

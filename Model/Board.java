@@ -1,7 +1,8 @@
 package Model;
 
 import java.util.*;
-import Model.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Class representing abstraction of board configuration
@@ -9,120 +10,92 @@ import Model.*;
 public class Board
 {
     private int size;
-    private Tile[][] config;
     private List<Turtle> turtles;
     private List<Jewel> jewels;
+    private Object[][] config;
 
-    public Board(int n, List<Turtle> players, List<Jewel> gems)
+    public Board(int n, List<Turtle> players, List<Jewel> jwls)
     {
         size = n;
         config = new Tile[n][n];
-        turtles = players;
-        placeTurtles(turtles);
-        jewels = gems;
-        placeJewels(gems);
+        turtles = new ArrayList<>(players);
+        jewels = new ArrayList<>(jwls);
+        placeTiles(); // Collecting all players and jewels into 1 list);
     }
 
-    public void placeTurtles(List<Turtle> trtls)
-    {
-        // Placing all turtles on board
-        for (Tile t: trtls) {setTileAtPos(t.getCoord(), t);}
+    public void placeTiles() {
+        // Adding turtles and jewels to list of all tiles
+        List<Tile> toPlace = Stream.of(turtles, jewels)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        // Setting each tile at position
+        for(Tile b: toPlace) {
+            setTileAtPos(b.getCoord(), b);}
     }
 
-    public void placeJewels(List<Jewel> jwls)
-    {
-        // Placing all jewels on board
-        for (Jewel j: jwls) {setTileAtPos(j.getCoord(), j);}
-    }
-
-    public boolean checkForJewel(Coordinate target)
-    {
-        return (getTileAtPos(target) instanceof Jewel); // Helper method to check for jewel
-    }
-
-    public Tile getTileAtPos(Coordinate target)
-    {
+    /**
+     * Returns tile at coordinate specified
+     * @param target Target coordinate
+     * @return Tile A tile or null if coordinate is unoccupied
+     */
+    public Tile getTileAtPos(Coordinate target) {
         // Returns tile at specific coordinate
-        return config[target.getX()][target.getY()];
+        return (Tile) config[target.getX()][target.getY()];
     }
 
-    public void setTileAtPos(Coordinate target, Tile place)
-    {
-        // Sets tile at specific coordinate to specific Tile
-        if(place == null) { removeTile(target);} // Removes tile if null value in inputted
+    /**
+     * Setting tile at particular coordinate on board
+     * @param target Location where tile will be placed
+     * @param toPlace Tile to put on coordinate
+     */
+    public void setTileAtPos(Coordinate target, Tile toPlace) {
+        if((toPlace != null) && (!toPlace.getCoord().equals(target))) {// Changing coordinate of tile if it doesn't match with new position
+            toPlace.setCoord(target);}
+
+        config[target.getX()][target.getY()] = toPlace; // Saving to list of occupiedTiles coordinates
+    }
+
+    /**
+     * Tests if coordinate is empty by checking array of tiles
+     * @param c Coordinate to check
+     * @return boolean True if Coordinate is empty
+     */
+    public boolean isClear(Coordinate c) {return (getTileAtPos(c) == null);}
+
+    public void clear(Coordinate c) {
+        config[c.getX()][c.getY()] = null;
+    }
+
+    /**
+     * Moves a player's turtle while simultaeneously checking for Jewel. Turtle moves if no jewel is present or is marked winner and picks up jewels
+     * @param toMove Turtle to be moved
+     * @param dest New coordinate where Turtle will move
+     */
+    public void moveTurtle(Turtle toMove, Coordinate dest) {
+        // Board checking if player Turtle is about to be moved onto jewel
+        if(checkForJewel(dest)) {
+            pickJewel(toMove, (Jewel) getTileAtPos(dest));} // Mark player as winner if they are about to pick up jewel
         else{
-            place.setCoordinate(target); // Place tile on board and update tile's coordinate
-            config[target.getX()][target.getY()] = place;
-        }
-    }
-
-    public boolean isEmpty(Coordinate c)
-    {
-        Tile tester = config[c.getX()][c.getY()];
-        return (!(tester instanceof Turtle) && !(tester instanceof Jewel)); // Tests if tile is empty
-    }
-
-    public void shiftTurtle(Turtle toMove, Coordinate dest)
-    {
-        // Moving tile in desired direction
-        Coordinate orig = toMove.getCoord();
-        if(checkForJewel(dest)) { // Checking if player Turtle is about to be moved onto jewel
-            markWinner(toMove); // Mark player as winner if they are picking up jewel and remove corresponding turtle from board
-            jewels.remove(getTileAtPos(dest)); // Removing from Board's list of current Jewels
-            removeTile(dest);}
-        else {
+            Coordinate orig = toMove.getCoord();
             setTileAtPos(dest, toMove);
-            removeTile(orig);} // If player is not moving to jewel, Set destination tile to Turtle and clear previous tile
+            clear(orig);} // Moving player to new tile if no jewel is found
     }
 
-    public void removeTile(Coordinate toClear)
-    {
-        config[toClear.getY()][toClear.getY()] = null; // Clearing space where target was
+    public void pickJewel(Turtle winner, Jewel toPick) {
+        winner.won(); // Setting player as winner
+        turtles.remove(winner);
+        clear(winner.getCoord()); // Removing Turtle tile
+        jewels.remove(toPick);
+        clear(toPick.getCoord()); // Removing Jewel tile
     }
 
-    public void markWinner(Turtle winner)
-    {
-        // Method to mark Turtle as winner
-        winner.won();
-        removeTile(winner.getCoord());
-        turtles.remove(winner); // Remove player from board
-        //TODO: FIX THIS, WIN NOT TAKING JEWEL OFF BOARD
-    }
-
-    public Coordinate coordAhead(Coordinate orig, Direction di)
-    {
-        // Calculates coordinate ahead based on shift in particular direction
-        Coordinate newC = orig.copy();
-        if ((di == Direction.NORTH) || (di == Direction.SOUTH)) // Condition for vertical chg
-        {
-            newC.setY((di == Direction.NORTH) ? orig.getY() - 1: orig.getY() + 1); // Chg vertical position by -1 if facing north and +1 if facing south
-        }else // Condition for horizontal change
-        {
-            newC.setX((di == Direction.EAST) ? orig.getX() + 1: orig.getX() - 1); // Chg horizontal position by -1 if facing west and +1 if facing east
-        }
-        return newC;
-    }
-
-    public Coordinate coordBehind(Coordinate orig, Direction di)
-    {
-        // Calculates coordinate behind based on shift opposite to particular direction
-        Coordinate newC = orig.copy();
-        if ((di == Direction.NORTH) || (di == Direction.SOUTH)) // Condition for vertical chg
-        {
-            newC.setY((di == Direction.NORTH) ? orig.getY() + 1: orig.getY() - 1); // Chg vertical position by +1 if facing north and -1 if facing south
-        }else // Condition for horizontal change
-        {
-            newC.setX((di == Direction.EAST) ? orig.getX() - 1: orig.getX() + 1); // Chg horizontal position by +1 if facing west and -1 if facing east
-        }
-        return newC;
-    }
+    public boolean checkForJewel(Coordinate target) {return (getTileAtPos(target) instanceof Jewel);}
+        // Helper method to check if coordinate is Jewel
 
     public List<Turtle> getTurtles() {return turtles;} // Returns list of turtle tiles
 
-    public List<Jewel> getJewels() {return jewels;} // Returns list of jewel tiles
-
-    public int getSize()
-    {
-        return size;
-    }
+    public List<Jewel> getJewels() {return jewels;}
+    //----------------------------------------------------------------------
+    public int getSize(){return size;}
 }

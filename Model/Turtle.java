@@ -2,15 +2,16 @@ package Model;
 
 import java.util.Stack;
 
-public class Turtle extends Tile {
-    private Direction dir = null;
+public class Turtle extends Tile
+{
+    private Direction dir;
     private String name;
     private Stack<Card> cardSequence;
     private boolean winner;
+    private Colour turtleCol;
 
     public Turtle(Coordinate c, Colour colour, Direction d) {
-        super(c);
-        setCol(colour);
+        super(c, colour);
         setDir(d);
         cardSequence = new Stack<>();
         winner = false;
@@ -31,7 +32,7 @@ public class Turtle extends Tile {
 
     public String getPlayerName() { return name;}
 
-    public Boolean hasWon() { return winner;}
+    public boolean hasWon() { return winner;}
 
     public Stack<Card> cardSeq()
     {
