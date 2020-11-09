@@ -5,8 +5,10 @@
  */
 
 package Controller;
-import Model.*;
-import java.util.*;
+import Model.Tile;
+import Model.Turtle;
+import Model.Coordinate;
+import java.util.List;
 
 /**
  * Class for parsing board configuration to game view. This class allows for the configuration of the Board, which is contained

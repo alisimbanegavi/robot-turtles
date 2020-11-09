@@ -1,9 +1,18 @@
 package Controller;
-import Model.*;
+
 import View.GameView;
 import java.util.ArrayList;
 import java.util.List;
-// import java.util.Scanner;
+
+import Model.Colour;
+import Model.Coordinate;
+import Model.Direction;
+import Model.Game;
+import Model.GameModel;
+import Model.Jewel;
+import Model.Player;
+import Model.Tile;
+import Model.Turtle;
 
 /**
  * @author Ali Simbanegavi + Daniel Cumming
