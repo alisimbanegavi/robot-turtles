@@ -1,7 +1,5 @@
 package Model;
 
-//import Controller.TileControl.TileHandler;
-
 public class Jewel extends Tile { // Class for Jewel objects
     private Colour col;
 

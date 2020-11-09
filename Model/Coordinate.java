@@ -1,6 +1,7 @@
 package Model;
 
-import java.util.*;
+import java.util.HashMap;
+
 public class Coordinate
 {
     private int xPos;
