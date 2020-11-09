@@ -1,6 +1,5 @@
 package Model;
 
-import Controller.*;
 import java.util.*;
 
 /**
@@ -8,54 +7,36 @@ import java.util.*;
  */
 public class GameModel
 {
-    private GameState state;
-    private ArrayDeque<TurtleMaster> players;
+    private static final int MAX_SIZE = 8;
+    private ArrayDeque<Turtle> players;
     private Board board;
-    private int maxSize;
+    private boolean complete;
 
-    public GameModel (List<TurtleMaster> tMasters, Board b)
-    {
-        board = b;
+    public GameModel(List<Turtle> tMasters, List<Jewel> jwls) {
+        board = new Board(MAX_SIZE, tMasters, jwls);
         players = new ArrayDeque<>(tMasters);
-        state = GameState.ONGOING;
-        maxSize = b.getSize();
+        complete = false;
     }
 
-    public boolean validate(Move chg)
-    {
-        // Checking if move is valid based on index of turtle's position on board and direction of turtle
-        if (chg == null) {return false;} // Move is automatically invalid if null
-        Card shift = chg.getCard();
-        if((shift == Card.LEFT) || ((shift == Card.RIGHT))) {return true;}
-        // Move is automatically valid if it is a left turn or right turn
+    public List<Turtle> turtles() {return board.getTurtles();} // Returns list of turtle tiles on board
 
-        Turtle currPlayer = chg.getCurrPlayer();
-        Direction currDir = currPlayer.getDir();
-        Coordinate test = board.newCoord(currPlayer.getCoord(), currDir);
+    public List<Jewel> jewels() {return board.getJewels();} // Returns list of jewel tiles on board
 
-        return ((!test.outBounds(maxSize)) && (board.isEmpty(test)));
-        // Valid move if new coordinate is in bounds and space is empty
-    }
+    public boolean gameOver(){return complete;} //  Checking if game is over
 
-    public GameState getGameState(){ return state;}
-
-    public boolean gameOver(){return (state == GameState.COMPLETE);} //  Checking if game is over
-
-    public ArrayDeque<TurtleMaster> getPlayers() {return players;} // Returns queue of players
+    public ArrayDeque<Turtle> players() {return players;} // Returns queue of players
 
     public Board getBoard() {return board;} // Returns game board
 
-    public void updateBoard(Move chg) {
-        if (validate(chg)) {
-            chg.execute();
-        }
-    } // Updates board if valid move is executed
-
+    public void update(Action chg) { // Update details in model after move is executed
+        chg.action();
+        // Resetting current queue of players in case any players have won and left game after a round
+        if (chg.getCurrPlayer().hasWon()) {players = new ArrayDeque<>(turtles());}
+        if (players.size() == 0) {complete = true;} // Mark game complete if all players have collected their jewels and board is empty
+    } // Updates board if valid move is executed while keeping track of whether or not game is over
 
     public List<String> moveList() {return List.of("LEFT", "RIGHT", "FORWARD", "BUG");}
     // Helper method to return card instructions as strings; will help with parsing user input in GameController.promptMove()
 
-
-    public int getMaxSize() {return maxSize;} // Returns maximum size of board according to model
-
+    public int getMaxSize() {return MAX_SIZE;} // Returns maximum size of board according to model
 }
