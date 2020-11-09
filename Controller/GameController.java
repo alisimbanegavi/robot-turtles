@@ -1,43 +1,41 @@
-/*
-  @author Ali Simbanegavi + Daniel Cumming
+package Controller;
+import Model.GameModel;
+import Model.Turtle;
+import Model.Action;
+import Model.Card;
+import View.GameView;
+import java.util.ArrayDeque;
+import java.util.Scanner;
+
+/** @author Ali Simbanegavi + Daniel Cumming
  * @version C3721.2.0
  * @since 2020-11-07
- */
-
-package Controller;
-import Model.*;
-import View.*;
-import java.util.*;
-
-/**
+ *
  * Class of main game controller. This class initializes the game, uses the view to prompt players for moves
  * and executes moves if they are validated by the current model.
  */
 public class GameController {
-    private final Scanner input;
     private GameModel model;
 
     /**
      * Constructor for controller
      */
-    public GameController(){
-        input = new Scanner (System.in);
-    } // Instantiating Scanner object for console input
+    public GameController(){}
 
     /**
      * Begins game by calling new initializer object. First step of gameplay before players can execute moves
      * @return boolean Returns true if game is successfully initialized
      */
     public boolean initializeGame(){
-        GameView.displayText("Welcome to ROBOT TURTLES!");
-        GameView.displayPrompt("Game Menu\n1) Play a Game\n2) Exit\n\nEnter Choice: ");
-        if (input.nextInt() == 1){
-            GameView.displayPrompt("Enter the number of players: ");
-            GameInitializer.start(input.nextInt());
+        GameView.displayText("- - - - - - - - - - WELCOME to ROBOT TURTLES - - - - - - - - - - ");
+        GameView.displayPrompt("GAME MENU:\n1) PLAY GAME\n2) EXIT\n\nENTER CHOICE: ");
+        if (GameView.readDigit() == 1){
+            GameView.displayPrompt("\nENTER NUMBER OF PLAYERS [1-4]: ");
+            GameInitializer.start(GameView.readDigit());
             model = GameInitializer.newGame();
             return true;
         }
-        GameView.displayText("Goodbye!");
+        GameView.displayText("GOODBYE!");
         return false;
     }
 
@@ -49,13 +47,21 @@ public class GameController {
     public Action promptMove(Turtle player)
     {
         // Prompting player for move by requesting input
-        GameView.displayPrompt(player.getPlayerName() + " - Enter move card [LEFT, RIGHT, FORWARD, BUG]: ");
-        String response = input.nextLine().toUpperCase(); // Saving response and making text uppercase for processing
+        GameView.displayText(player.getPlayerName() + " (PLAYER " + (player.getColour().ordinal() + 1) + ") - ENTER ACTION..............");
+
+        StringBuilder sb = new StringBuilder(); // Building string for prompt
+        sb.append("[LEFT (" + player.getDir().turnDir("LEFT").toString() + ")"); // Direction player will turn in left is chosen
+        sb.append(", RIGHT (" + player.getDir().turnDir("RIGHT").toString() + ")"); // Direction if right is chosen
+        sb.append(", FORWARD (" + player.getDir().toString() + ")"); // Direction if forward step is chosen
+        sb.append(", BUG]: ");
+
+        GameView.displayPrompt(sb.toString());
+        String response = GameView.readText().toUpperCase(); // Saving response and making text uppercase for processing
         Card choice = (model.moveList().contains(response)) ? Card.valueOf(response) : null; // Getting corresponding Card for requested move
         Action result = new Action(player, choice, model.getBoard()); // Creating Move for player to execute on board
 
         if(result.validate()) {return result;} // Move is returned if valid according to model
-        else {System.out.println("Sorry, " + player.getPlayerName() + ", but that move is invalid." );}
+        else {GameView.displayText("SORRY, " + player.getPlayerName() + " (PLAYER " + (player.getColour().ordinal() + 1) + "), THAT MOVE IS INVALID.");}
         return promptMove(player); // Recursively prompt user for Move again if previous input was invalid
     }
 
@@ -66,17 +72,18 @@ public class GameController {
     public void playTurn(Action mov)
     {
         Turtle curr = mov.getCurrPlayer(); // Current player
-        GameView.displayText(curr.getPlayerName() + " (Player "+ (curr.getColour().ordinal()+1) +") your " +
-                curr.getColour().name() + " turtle is facing " +
-                curr.getDir().name());
         model.update(mov); // Updating board and executing move through model
 
         if (mov.getCard().isTurn()) { // Sending view update if player is facing new direction after action
-            GameView.displayText(curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is now facing " + curr.getDir().toString() + ".\n");
+            GameView.displayText(curr.getPlayerName() + " (PLAYER "+ (curr.getColour().ordinal()+1) +") - YOUR " + curr.getColour().toString() + " TURTLE IS NOW FACING " + curr.getDir().toString() + ".\n");
         }
 
+        // Updating view to show board after each player's turn
+        GameView.displayBoard(BoardConverter.parseJewels(model.jewels()), BoardConverter.parseTurtles(model.turtles()), model.getMaxSize());
+
         if(curr.hasWon()){ // Updating view if a player's Move has led to a win
-            GameView.displayText("Congratulations, "+ curr.getPlayerName() + "!\nYour "+curr.getColour().toString() +" Turtle has captured a Jewel. You have WON!!!");
+            GameView.displayText("CONGRATULATIONS, "+ curr.getPlayerName() +  " (PLAYER  " + (curr.getColour().ordinal()+1) +
+                    ")! \nYOUR "+curr.getColour().toString() +" TURTLE HAS CAPTURED A JEWEL. YOU HAVE WON!!!");
         }
     }
 
@@ -85,14 +92,12 @@ public class GameController {
      */
     public void playRound()
     {
-        System.out.println("New round beginning. Players, prepare your strategy.");
+        GameView.displayText("- - - - - - NEW ROUND BEGINNING | PREPARE YOUR STRATEGY - - - - - -\n");
         ArrayDeque<Turtle> plyrSequence = model.players();
 
         for (Turtle curr : plyrSequence) { //Iterating through each player in game and executing move
-            GameView.displayPrompt("\n" + curr.getPlayerName() + ", your " + curr.getColour().toString() + " turtle is facing " + curr.getDir().toString() + ".\n");
             playTurn(promptMove(curr)); // Playing one turn for current player
         }
-        GameView.displayText("Round is complete. All players have moved their turtles.");
     }
 
     /**
@@ -105,7 +110,6 @@ public class GameController {
         while (!model.gameOver()){ // Playing rounds repeatedly while game status is not complete
             playRound();
             // Updating view and display board after each round has been played
-            GameView.displayBoard(BoardConverter.parseJewels(model.jewels()), BoardConverter.parseTurtles(model.turtles()), dimensions);
         }
         GameView.displayText("Congratulations everyone has won!\n\n-----------------------"); // Game has ended and display message is shown
     }

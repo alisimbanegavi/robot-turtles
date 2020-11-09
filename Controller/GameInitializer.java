@@ -1,28 +1,37 @@
 package Controller;
-
 import Model.*;
-import View.*;
-import java.util.*;
+import View.GameView;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 /**
+ * @author Ali Simbanegavi + Daniel Cumming
+ * @version C3721.2.0
+ * @since 2020-11-09
+ *
  * Class to initialize game by assigning players and populating board
  */
 public abstract class GameInitializer
 {
     private static final int SIZE = 8;
     private static int nPlayers;
-    private static Scanner input;
 
     public GameInitializer(){}
 
     public static void start(int numPlayers){
-        input = new Scanner(System.in);
-        nPlayers = numPlayers;
+        if((numPlayers<1) || (numPlayers>4)){ // Condition if number of players inputted is not between 1-4
+            GameView.displayText((numPlayers < 1) ? "\nNOT ENOUGH PLAYERS!": "\nTOO MANY PLAYERS!");
+            GameView.displayPrompt("PLEASE RE-ENTER NUMBER OF PLAYERS [1-4]:");
+            start(GameView.readDigit()); // Recursively calling method to try again
+        }
+        else {
+            nPlayers = numPlayers;}
     }
 
     public static GameModel newGame() {
         List<Turtle> initPlayers = createPlayers();
-        List<Tile> initJewels = createJewels(initPlayers);
+        List<Jewel> initJewels = createJewels(initPlayers);
         return new GameModel(initPlayers, initJewels);
     }
 
@@ -38,18 +47,18 @@ public abstract class GameInitializer
         {
             // Gathering player info through system input and initialize Turtles
             currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);
-            Turtle newPlayer = new Player(locations.get(i), Colour.values()[i], currDir);
-            GameView.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
-            newPlayer.setPlayerName(input.next()); // Prompting each player for their name and setting
+            Turtle newPlayer = new Turtle(locations.get(i), Colour.values()[i], currDir);
+            GameView.displayPrompt("ENTER PLAYER "+ (i+1) +"'S NAME: ");
+            newPlayer.setPlayerName(GameView.readText()); // Prompting each player for their name and setting
             playerList.add(newPlayer);
         }
         return playerList;
     }
 
-    public static List<Tile> createJewels(List<Turtle> players)
+    public static List<Jewel> createJewels(List<Turtle> players)
     {
         // List of jewels generated for each player with coordinates assigned to center
-        List<Tile> jwls = new ArrayList<>();
+        List<Jewel> jwls = new ArrayList<>();
         List<Coordinate> cntr = centerCoordinates();
         int count = 0;
 
