@@ -3,7 +3,7 @@ package Model;
 import java.util.ArrayDeque;
 import Controller.GameController;
 
-public class GameLoop {
+public abstract class GameLoop {
     private GameController controller;
     private GameModel game;
 
