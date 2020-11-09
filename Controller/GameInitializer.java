@@ -23,7 +23,7 @@ public abstract class GameInitializer
     public static GameModel newGame() {
         List<Turtle> initPlayers = createPlayers();
         List<Tile> initJewels = createJewels(initPlayers);
-        return new GameModel(initPlayers, initJewels);
+        return new Game(initPlayers, initJewels);
     }
 
     public static List<Turtle> createPlayers()

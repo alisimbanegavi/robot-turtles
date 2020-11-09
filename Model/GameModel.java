@@ -5,18 +5,18 @@ import java.util.*;
 /**
  * Class for game model used to check rules
  */
-public class GameModel
+public abstract class GameModel
 {
-    private static final int MAX_SIZE = 8;
-    private ArrayDeque<Turtle> players;
-    private Board board;
-    private boolean complete;
+    protected static final int MAX_SIZE = 8;
+    protected ArrayDeque<Turtle> players;
+    protected Board board;
+    protected boolean complete;
 
-    public GameModel(List<Turtle> tMasters, List<Tile> jwls) {
-        board = new Board(MAX_SIZE, tMasters, jwls);
-        players = new ArrayDeque<>(tMasters);
-        complete = false;
-    }
+    // public GameModel(List<Turtle> tMasters, List<Tile> jwls) {
+    //     board = new Board(MAX_SIZE, tMasters, jwls);
+    //     players = new ArrayDeque<>(tMasters);
+    //     complete = false;
+    // }
 
     public List<Turtle> turtles() {return board.getTurtles();} // Returns list of turtle tiles on board
 
