@@ -2,10 +2,12 @@ package Controller;
 import Model.GameModel;
 import Model.Turtle;
 import Model.Action;
+import Model.PlayerAction;
 import Model.Card;
 import View.GameView;
 import java.util.ArrayDeque;
-import java.util.Scanner;
+
+// import java.util.Scanner;
 
 /** @author Ali Simbanegavi + Daniel Cumming
  * @version C3721.2.0
@@ -58,7 +60,7 @@ public class GameController {
         GameView.displayPrompt(sb.toString());
         String response = GameView.readText().toUpperCase(); // Saving response and making text uppercase for processing
         Card choice = (model.moveList().contains(response)) ? Card.valueOf(response) : null; // Getting corresponding Card for requested move
-        Action result = new Action(player, choice, model.getBoard()); // Creating Move for player to execute on board
+        Action result = new PlayerAction(player, choice, model.getBoard()); // Creating Move for player to execute on board
 
         if(result.validate()) {return result;} // Move is returned if valid according to model
         else {GameView.displayText("SORRY, " + player.getPlayerName() + " (PLAYER " + (player.getColour().ordinal() + 1) + "), THAT MOVE IS INVALID.");}

@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 /**
  * Class representing abstraction of board configuration
  */
-public class Board
+public abstract class Board
 {
     private int size;
     private List<Turtle> turtles;

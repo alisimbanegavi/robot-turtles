@@ -3,7 +3,7 @@ package Model;
 /**
  * Class for executing player instructions.
  */
-public class Action
+public abstract class Action
 {
     private Turtle player;
     private Card instruction;
