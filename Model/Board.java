@@ -11,10 +11,10 @@ public class Board
 {
     private int size;
     private List<Turtle> turtles;
-    private List<Jewel> jewels;
+    private List<Tile> jewels;
     private Object[][] config;
 
-    public Board(int n, List<Turtle> players, List<Jewel> jwls)
+    public Board(int n, List<Turtle> players, List<Tile> jwls)
     {
         size = n;
         config = new Tile[n][n];
@@ -95,7 +95,7 @@ public class Board
 
     public List<Turtle> getTurtles() {return turtles;} // Returns list of turtle tiles
 
-    public List<Jewel> getJewels() {return jewels;}
+    public List<Tile> getJewels() {return jewels;}
     //----------------------------------------------------------------------
     public int getSize(){return size;}
 }

@@ -2,13 +2,12 @@ package Model;
 
 import java.util.Stack;
 
-public class Turtle extends Tile
+public abstract class Turtle extends Tile
 {
     private Direction dir;
     private String name;
     private Stack<Card> cardSequence;
     private boolean winner;
-    private Colour turtleCol;
 
     public Turtle(Coordinate c, Colour colour, Direction d) {
         super(c, colour);

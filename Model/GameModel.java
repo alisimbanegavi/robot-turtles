@@ -12,7 +12,7 @@ public class GameModel
     private Board board;
     private boolean complete;
 
-    public GameModel(List<Turtle> tMasters, List<Jewel> jwls) {
+    public GameModel(List<Turtle> tMasters, List<Tile> jwls) {
         board = new Board(MAX_SIZE, tMasters, jwls);
         players = new ArrayDeque<>(tMasters);
         complete = false;
@@ -20,7 +20,7 @@ public class GameModel
 
     public List<Turtle> turtles() {return board.getTurtles();} // Returns list of turtle tiles on board
 
-    public List<Jewel> jewels() {return board.getJewels();} // Returns list of jewel tiles on board
+    public List<Tile> jewels() {return board.getJewels();} // Returns list of jewel tiles on board
 
     public boolean gameOver(){return complete;} //  Checking if game is over
 

@@ -15,7 +15,7 @@ import java.util.*;
 public abstract class BoardConverter {
     public BoardConverter(){}
 
-    public static int [][] parseJewels(List<Jewel> jewels)
+    public static int [][] parseJewels(List<Tile> jewels)
     {
         int [][] results = new int [jewels.size()][3];
         for (int i = 0; i < jewels.size(); i++){

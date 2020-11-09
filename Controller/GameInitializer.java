@@ -22,7 +22,7 @@ public abstract class GameInitializer
 
     public static GameModel newGame() {
         List<Turtle> initPlayers = createPlayers();
-        List<Jewel> initJewels = createJewels(initPlayers);
+        List<Tile> initJewels = createJewels(initPlayers);
         return new GameModel(initPlayers, initJewels);
     }
 
@@ -38,7 +38,7 @@ public abstract class GameInitializer
         {
             // Gathering player info through system input and initialize Turtles
             currDir = (locations.get(i).getY() == 0 ? Direction.SOUTH: Direction.NORTH);
-            Turtle newPlayer = new Turtle(locations.get(i), Colour.values()[i], currDir);
+            Turtle newPlayer = new Player(locations.get(i), Colour.values()[i], currDir);
             GameView.displayPrompt("Enter Player "+ (i+1) +"'s name: ");
             newPlayer.setPlayerName(input.next()); // Prompting each player for their name and setting
             playerList.add(newPlayer);
@@ -46,10 +46,10 @@ public abstract class GameInitializer
         return playerList;
     }
 
-    public static List<Jewel> createJewels(List<Turtle> players)
+    public static List<Tile> createJewels(List<Turtle> players)
     {
         // List of jewels generated for each player with coordinates assigned to center
-        List<Jewel> jwls = new ArrayList<>();
+        List<Tile> jwls = new ArrayList<>();
         List<Coordinate> cntr = centerCoordinates();
         int count = 0;
 
