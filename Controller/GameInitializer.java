@@ -1,10 +1,17 @@
 package Controller;
 
-import Model.*;
-import View.GameView;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import View.GameView;
+
+import Model.Colour;
+import Model.Coordinate;
+import Model.Direction;
+import Model.GameModel;
+import Model.Jewel;
+import Model.Tile;
+import Model.Turtle;
 
 /**
  * @author Ali Simbanegavi + Daniel Cumming

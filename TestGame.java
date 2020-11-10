@@ -1,4 +1,3 @@
-// import Controller.BasicGameController;
 import Controller.GameController;
 
 /**
@@ -7,7 +6,6 @@ import Controller.GameController;
 public class TestGame {
     public static void main(String[] args) {
         GameController control = new GameController();
-        // GameController control = new BasicGameController();
         if (control.initializeGame()) control.playGame();
     }
 }
