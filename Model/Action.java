@@ -3,15 +3,13 @@ package Model;
 /**
  * Class for executing player instructions.
  */
-public abstract class Action
-{
-    private Turtle player;
-    private Card instruction;
-    private Board gBoard;
-    private boolean bugCard;
+public class Action {
+    private final Turtle player;
+    private final Card instruction;
+    private final Board gBoard;
+    private final boolean bugCard;
 
-    public Action(Turtle t, Card input, Board bGame)
-    {
+    public Action(Turtle t, Card input, Board bGame) {
         player = t;
         instruction = input;
         gBoard = bGame;
@@ -20,19 +18,19 @@ public abstract class Action
 
     /**
      * Retrieves Turtle object of player currently executing action
+     *
      * @return Turtle Current player
      */
-    public Turtle getCurrPlayer()
-    {
+    public Turtle getCurrPlayer() {
         return player;
     }
 
     /**
      * Retrieves Card with instruction of player currently executing action
+     *
      * @return Card Current instruction
      */
-    public Card getCard()
-    {
+    public Card getCard() {
         return instruction;
     }
 
@@ -40,14 +38,20 @@ public abstract class Action
      * Executes move requested by player
      */
     public void action() {
-        if(bugCard) { // BUG CARD
+        if (bugCard) { // BUG CARD
             bug();
-            return;}// Bug card executes and method stops
+            return;
+        }// Bug card executes and method stops
 
-        {player.addToCardSeq(instruction);} // Card will be added to sequence of player's executed cards if not bug
+        {
+            player.addToCardSeq(instruction);
+        } // Card will be added to sequence of player's executed cards if not bug
         if (instruction.isTurn()) {
-            turnLR(instruction);} // LEFT OR RIGHT TURN
-        else {forward();} // FORWARD STEP
+            turnLR(instruction);
+        } // LEFT OR RIGHT TURN
+        else {
+            forward();
+        } // FORWARD STEP
     }
 
     public void forward() {
@@ -59,6 +63,7 @@ public abstract class Action
 
     /**
      * Turns Turtle to new direction after turning left or right
+     *
      * @param side Card Indicates if left or right turn is desired
      */
     public void turnLR(Card side) {
@@ -69,12 +74,15 @@ public abstract class Action
     /**
      * Undoes move performed by last card used by Turtle
      */
-    public void bug(){
-        if(player.cardSeq().size() == 0) {return;} // Reversal only executed if previous card sequence is not empty
+    public void bug() {
+        if (player.cardSeq().size() == 0) {
+            return;
+        } // Reversal only executed if previous card sequence is not empty
 
         Card buggy = player.removeFromSeq(); // Last card executed
         if (buggy.isTurn()) {
-            turnLR(buggy.opposite());} // Turn in opposite direction if last card was right or left
+            turnLR(buggy.opposite());
+        } // Turn in opposite direction if last card was right or left
         else { // Go back in reverse direction if last card was forward step
             Direction facing = player.getDir(); // Player's current direction
             player.setDir(facing.reverse()); // Reversing player movement
@@ -83,22 +91,30 @@ public abstract class Action
         }
     }
 
-    public boolean isBug() {return bugCard;}
+    public boolean isBug() {
+        return bugCard;
+    }
 
     /**
      * Checks if move is valid based on index of turtle's position on board and direction of turtle as specified in the Action
+     *
      * @return boolean True if
      */
-    public boolean validate()
-    {
-        if (getCard() == null) {return false;} // Move is automatically invalid if null
+    public boolean validate() {
+        if (getCard() == null) {
+            return false;
+        } // Move is automatically invalid if null
         Card shift = getCard(); // Checking move
 
         // BUG CARD---------------------------------
-        if (isBug()){return validBug();} // Check for valid bug if bug card is inputted
+        if (isBug()) {
+            return validBug();
+        } // Check for valid bug if bug card is inputted
 
         // LEFT / RIGHT---------------------------------
-        if(shift.isTurn()) {return true;}
+        if (shift.isTurn()) {
+            return true;
+        }
         // Move is automatically valid if move is a left turn or right turn
 
         // FORWARD---------------------------------------
@@ -111,17 +127,21 @@ public abstract class Action
 
     /**
      * Checks if bug card request to undo last turn is valid for a player based on their location and past actions
+     *
      * @return boolean True if bug card can be used to undo action
      */
-    public boolean validBug()
-    {
+    public boolean validBug() {
         // Method to test if bug card move is valid based on index of turtle's position on board and direction of turtle
-        if (!isBug()) {return false;} // False if bug card is not being evaluated
+        if (!isBug()) {
+            return false;
+        } // False if bug card is not being evaluated
 
         Coordinate currCoord = player.getCoord(); // Player's current coordinate
 
-        if(player.cardSeq().size() == 0) { return false;} // Invalid bug card if player hasn't played yet
-        if(!player.cardSeq().peek().isTurn()) // Test if bug card is requesting to undo forward step and NOT left/right turn
+        if (player.cardSeq().size() == 0) {
+            return false;
+        } // Invalid bug card if player hasn't played yet
+        if (!player.cardSeq().peek().isTurn()) // Test if bug card is requesting to undo forward step and NOT left/right turn
         {
             Direction bugDir = player.getDir().reverse(); // Getting reverse of current player's direction
             Coordinate test = currCoord.getNeighbour(bugDir); // Testing coordinate behind bug

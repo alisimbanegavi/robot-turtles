@@ -1,24 +1,21 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import java.util.stream.Collectors;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Class representing abstraction of board configuration
  */
-public abstract class Board
-{
-    private int size;
-    private List<Turtle> turtles;
-    private List<Tile> jewels;
-    private Object[][] config;
+public class Board {
+    private final int size;
+    private final List<Turtle> turtles;
+    private final List<Tile> jewels;
+    private final Object[][] config;
 
-    public Board(int n, List<Turtle> players, List<Tile> jwls)
-    {
+    public Board(int n, List<Turtle> players, List<Tile> jwls) {
         size = n;
         config = new Tile[n][n];
         turtles = new ArrayList<>(players);
@@ -33,12 +30,14 @@ public abstract class Board
                 .collect(Collectors.toList());
 
         // Setting each tile at position
-        for(Tile b: toPlace) {
-            setTileAtPos(b.getCoord(), b);}
+        for (Tile b : toPlace) {
+            setTileAtPos(b.getCoord(), b);
+        }
     }
 
     /**
      * Returns tile at coordinate specified
+     *
      * @param target Target coordinate
      * @return Tile A tile or null if coordinate is unoccupied
      */
@@ -49,22 +48,27 @@ public abstract class Board
 
     /**
      * Setting tile at particular coordinate on board
-     * @param target Location where tile will be placed
+     *
+     * @param target  Location where tile will be placed
      * @param toPlace Tile to put on coordinate
      */
     public void setTileAtPos(Coordinate target, Tile toPlace) {
-        if((toPlace != null) && (!toPlace.getCoord().equals(target))) {// Changing coordinate of tile if it doesn't match with new position
-            toPlace.setCoord(target);}
+        if ((toPlace != null) && (!toPlace.getCoord().equals(target))) {// Changing coordinate of tile if it doesn't match with new position
+            toPlace.setCoord(target);
+        }
 
         config[target.getX()][target.getY()] = toPlace; // Saving to list of occupiedTiles coordinates
     }
 
     /**
      * Tests if coordinate is empty by checking array of tiles
+     *
      * @param c Coordinate to check
      * @return boolean True if Coordinate is empty
      */
-    public boolean isClear(Coordinate c) {return (getTileAtPos(c) == null);}
+    public boolean isClear(Coordinate c) {
+        return (getTileAtPos(c) == null);
+    }
 
     public void clear(Coordinate c) {
         config[c.getX()][c.getY()] = null;
@@ -72,17 +76,20 @@ public abstract class Board
 
     /**
      * Moves a player's turtle while simultaeneously checking for Jewel. Turtle moves if no jewel is present or is marked winner and picks up jewels
+     *
      * @param toMove Turtle to be moved
-     * @param dest New coordinate where Turtle will move
+     * @param dest   New coordinate where Turtle will move
      */
     public void moveTurtle(Turtle toMove, Coordinate dest) {
         // Board checking if player Turtle is about to be moved onto jewel
-        if(checkForJewel(dest)) {
-            pickJewel(toMove, (Jewel) getTileAtPos(dest));} // Mark player as winner if they are about to pick up jewel
-        else{
+        if (checkForJewel(dest)) {
+            pickJewel(toMove, (Jewel) getTileAtPos(dest));
+        } // Mark player as winner if they are about to pick up jewel
+        else {
             Coordinate orig = toMove.getCoord();
             setTileAtPos(dest, toMove);
-            clear(orig);} // Moving player to new tile if no jewel is found
+            clear(orig);
+        } // Moving player to new tile if no jewel is found
     }
 
     public void pickJewel(Turtle winner, Jewel toPick) {
@@ -93,12 +100,20 @@ public abstract class Board
         clear(toPick.getCoord()); // Removing Jewel tile
     }
 
-    public boolean checkForJewel(Coordinate target) {return (getTileAtPos(target) instanceof Jewel);}
-        // Helper method to check if coordinate is Jewel
+    public boolean checkForJewel(Coordinate target) {
+        return (getTileAtPos(target) instanceof Jewel);
+    }
+    // Helper method to check if coordinate is Jewel
 
-    public List<Turtle> getTurtles() {return turtles;} // Returns list of turtle tiles
+    public List<Turtle> getTurtles() {
+        return turtles;
+    } // Returns list of turtle tiles
 
-    public List<Tile> getJewels() {return jewels;}
-    //----------------------------------------------------------------------
-    public int getSize(){return size;}
+    public List<Tile> getJewels() {
+        return jewels;
+    }
+
+    public int getSize() {
+        return size;
+    }
 }

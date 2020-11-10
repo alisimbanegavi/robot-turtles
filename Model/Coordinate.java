@@ -2,57 +2,52 @@ package Model;
 
 import java.util.HashMap;
 
-public class Coordinate
-{
+public class Coordinate {
     private int xPos;
     private int yPos;
 
-    public Coordinate(int x, int y)
-    {
+    public Coordinate(int x, int y) {
         setX(x);
         setY(y);
     }
 
-    public void setX(int x)
-    {
+    public void setX(int x) {
         xPos = x;
     }
 
-    public void setY(int y)
-    {
+    public void setY(int y) {
         yPos = y;
     }
 
-    public int getX()
-    {
+    public int getX() {
         return xPos;
     }
 
-    public int getY()
-    {
+    public int getY() {
         return yPos;
     }
 
     /**
      * Method to calculate all adjacent neighbour positions for current coordinate
+     *
      * @return HashMap<></> List of all adjacent coordinates
      */
-    public HashMap<Direction, Coordinate> getAdjacent()
-    {
+    public HashMap<Direction, Coordinate> getAdjacent() {
         HashMap<Direction, Coordinate> adjMap = new HashMap<>();
-        adjMap.put(Direction.NORTH, new Coordinate(xPos,yPos - 1));
-        adjMap.put(Direction.SOUTH, new Coordinate(xPos,yPos + 1));
-        adjMap.put(Direction.EAST, new Coordinate(xPos + 1,yPos));
-        adjMap.put(Direction.WEST, new Coordinate(xPos - 1,yPos));
+        adjMap.put(Direction.NORTH, new Coordinate(xPos, yPos - 1));
+        adjMap.put(Direction.SOUTH, new Coordinate(xPos, yPos + 1));
+        adjMap.put(Direction.EAST, new Coordinate(xPos + 1, yPos));
+        adjMap.put(Direction.WEST, new Coordinate(xPos - 1, yPos));
 
         return adjMap;
     }
 
     public Coordinate getNeighbour(Direction di) {
-        return getAdjacent().get(di);}
+        return getAdjacent().get(di);
+    }
 
     @Override
-    public boolean equals(Object other){
+    public boolean equals(Object other) {
         if (this == other) return true;
         if (!(other instanceof Coordinate)) return false;
 
@@ -60,5 +55,7 @@ public class Coordinate
         return this.xPos == tmp.xPos && this.yPos == tmp.yPos;
     }
 
-    public boolean outBounds(int MAX) {return xPos < 0 || xPos >= MAX || yPos < 0 || yPos >= MAX;}
+    public boolean outBounds(int MAX) {
+        return xPos < 0 || xPos >= MAX || yPos < 0 || yPos >= MAX;
+    }
 }

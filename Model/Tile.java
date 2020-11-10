@@ -1,7 +1,6 @@
 package Model;
 
-public abstract class Tile
-{
+public abstract class Tile {
     private Coordinate coord;
     private Colour col;
 
@@ -10,13 +9,19 @@ public abstract class Tile
         setColour(clr);
     }
 
-    public void setCoord(Coordinate co) {coord = co;}
+    public void setCoord(Coordinate co) {
+        coord = co;
+    }
 
-    public Coordinate getCoord() {return coord;}
+    public Coordinate getCoord() {
+        return coord;
+    }
 
     public Colour getColour() {
         return col;
     }
 
-    public void setColour(Colour c) { col = c;}
+    public void setColour(Colour c) {
+        col = c;
+    }
 }

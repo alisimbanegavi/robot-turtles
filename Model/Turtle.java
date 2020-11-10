@@ -2,11 +2,10 @@ package Model;
 
 import java.util.Stack;
 
-public abstract class Turtle extends Tile
-{
+public class Turtle extends Tile {
     private Direction dir;
     private String name;
-    private Stack<Card> cardSequence;
+    private final Stack<Card> cardSequence;
     private boolean winner;
 
     public Turtle(Coordinate c, Colour colour, Direction d) {
@@ -24,32 +23,36 @@ public abstract class Turtle extends Tile
         return dir;
     }
 
-    public void setPlayerName(String n)
-    {
+    public void setPlayerName(String n) {
         name = n;
     }
 
-    public String getPlayerName() { return name;}
+    public String getPlayerName() {
+        return name;
+    }
 
-    public boolean hasWon() { return winner;}
+    public boolean hasWon() {
+        return winner;
+    }
 
-    public Stack<Card> cardSeq()
-    {
+    public Stack<Card> cardSeq() {
         // Returns sequence of cards executed by player
         return cardSequence;
     }
 
-    public void addToCardSeq(Card toAdd)
-    {
+    public void addToCardSeq(Card toAdd) {
         cardSequence.push(toAdd);
     }
 
-    public Card removeFromSeq()
-    {
+    public Card removeFromSeq() {
         // Getting last card move executed by player
-        if (cardSequence.size() > 0) {return cardSequence.pop();}
+        if (cardSequence.size() > 0) {
+            return cardSequence.pop();
+        }
         return null;
     }
 
-    public void won() {winner = true;}
+    public void won() {
+        winner = true;
+    }
 }

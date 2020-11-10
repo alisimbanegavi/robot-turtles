@@ -5,22 +5,22 @@
  */
 
 package Controller;
+
+import Model.Coordinate;
 import Model.Tile;
 import Model.Turtle;
-import Model.Coordinate;
+
 import java.util.List;
 
 /**
  * Class for parsing board configuration to game view. This class allows for the configuration of the Board, which is contained
  * in the model, to be passed onto the view without contaminating the view by having it access the model directly.
  */
-public abstract class BoardConverter {
-    public BoardConverter(){}
+public class BoardConverter {
 
-    public static int [][] parseJewels(List<Tile> jewels)
-    {
-        int [][] results = new int [jewels.size()][3];
-        for (int i = 0; i < jewels.size(); i++){
+    public static int[][] parseJewels(List<Tile> jewels) {
+        int[][] results = new int[jewels.size()][3];
+        for (int i = 0; i < jewels.size(); i++) {
             Coordinate coord = jewels.get(i).getCoord();
             results[i][0] = coord.getX();
             results[i][1] = coord.getY();
@@ -29,9 +29,9 @@ public abstract class BoardConverter {
         return results;
     }
 
-    public static int [][] parseTurtles(List<Turtle> turtles){
-        int [][] results = new int [turtles.size()][4];
-        for (int i = 0; i < turtles.size(); i++){
+    public static int[][] parseTurtles(List<Turtle> turtles) {
+        int[][] results = new int[turtles.size()][4];
+        for (int i = 0; i < turtles.size(); i++) {
             Coordinate coord = turtles.get(i).getCoord();
             results[i][0] = coord.getX();
             results[i][1] = coord.getY();
