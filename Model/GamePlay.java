@@ -1,7 +1,6 @@
 package Model;
 
 import Controller.GameController;
-
 import java.util.ArrayDeque;
 
 public class GamePlay {
