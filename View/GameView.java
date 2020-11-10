@@ -59,7 +59,7 @@ public class GameView {
      *
      * @param jewels  Jewels on board
      * @param players Players on board
-     * @param size    Board size
+     * @param size    Board sizemaven
      */
     public static void displayBoard(int[][] jewels, int[][] players, int size) {
         System.out.println();

@@ -26,7 +26,7 @@ public class GamePlay {
      * @param player Player being prompted
      * @return Move Returns command if move has been validated by model
      */
-    private Action playMove(Turtle player) {
+    private Action requestAction(Turtle player) {
         Card choice = controller.getMove(player);
         Action result = new Action(player, choice, game.getBoard()); // Creating Move for player to execute on board
 
@@ -36,7 +36,7 @@ public class GamePlay {
         else {
             controller.invalidMove(player);
         }
-        return playMove(player); // Recursively prompt user for Move again if previous input was invalid
+        return requestAction(player); // Recursively prompt user for Move again if previous input was invalid
     }
 
     /**
@@ -46,7 +46,7 @@ public class GamePlay {
         controller.newRound();
         ArrayDeque<Turtle> plyrSequence = game.players();
         for (Turtle curr : plyrSequence) { //Iterating through each player in game and executing move
-            playTurn(playMove(curr)); // Playing one turn for current player
+            playTurn(requestAction(curr)); // Playing one turn for current player
         }
     }
 
