@@ -25,13 +25,7 @@ public class GameInitializer {
     private static int nPlayers;
 
     public static void start(int numPlayers) {
-        if ((numPlayers < 1) || (numPlayers > 4)) { // Condition if number of players inputted is not between 1-4
-            GameView.displayText((numPlayers < 1) ? "\nNOT ENOUGH PLAYERS!" : "\nTOO MANY PLAYERS!");
-            GameView.displayPrompt("PLEASE RE-ENTER NUMBER OF PLAYERS [1-4]:");
-            start(GameView.readDigit()); // Recursively calling method to try again
-        } else {
-            nPlayers = numPlayers;
-        }
+        nPlayers = numPlayers;
     }
 
     public static GameModel newGame() {
